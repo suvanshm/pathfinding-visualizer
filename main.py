@@ -58,16 +58,19 @@ def main(win):
                 # press 'd' to run dijkstra's algorithm
                 if event.key == pygame.K_d:
                     if start and end:
+                        grid50.reset()
                         grid50.update_neighbors()
                         dijkstra.dijkstra(win, grid50, start, end)
                 # press 'a' to run a* algorithm (manhattan distance)
                 if event.key == pygame.K_a:
                     if start and end:
+                        grid50.reset()
                         grid50.update_neighbors()
                         a_star.astar(win, grid50, start, end, a_star.h_manhattan)
                 # press 'e' to run a* algorithm (euclidean distance)
                 if event.key == pygame.K_e:
                     if start and end:
+                        grid50.reset()
                         grid50.update_neighbors()
                         a_star.astar(win, grid50, start, end, a_star.h_eucledian)
 

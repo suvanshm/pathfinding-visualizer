@@ -2,13 +2,13 @@ class Grid:
     
     # TODO:
 
-    ## Implement the class of the grid
+    ## Implement the class of the grid [DONE]
     ## You must be able to create a grid [DONE]
     ## You must be able to draw the grid [DONE]
     ## You must be able to reset the grid [DONE]
     ## You must be able to click on the nodes of the grid [DONE]
     ## You must also need to implement a method to update the neighbors of each node which 
-    # builds on top of the previous TODO
+    # builds on top of the previous [DONE]
     
     def __init__(self, rows):
         from components.spot import Spot
