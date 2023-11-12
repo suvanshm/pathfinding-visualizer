@@ -2,15 +2,16 @@ import pygame
 import sys
 import components.grid as grid
 import algorithms.dijkstra as dijkstra
+import algorithms.a_star as a_star
 
 # TODO: This is the server
-# 1. Add a button to select the algorithm
+# 1. Add a button to select the algorithm [can toggle from keyboard, yet to add buttons in UI]
 # 2. You must be able to select the start and end nodes [DONE]
 # 3. You must be able to add barriers [DONE]
 # 4. You must be able to reset the grid [DONE]
 # 5. You must be able to run the visualizer again after it has finished [DONE]
 # 6. The visualizer must stop once the start and end nodes find each other. [DONE]
-# 7. A path must be drawn from the start node to the end node once the visualizer has finished.
+# 7. A path must be drawn from the start node to the end node once the visualizer has finished. [DONE]
 
 # DIMENSIONS
 MENU_OFFSET = 200  # side menu for buttons and stats
@@ -59,6 +60,16 @@ def main(win):
                     if start and end:
                         grid50.update_neighbors()
                         dijkstra.dijkstra(win, grid50, start, end)
+                # press 'a' to run a* algorithm (manhattan distance)
+                if event.key == pygame.K_a:
+                    if start and end:
+                        grid50.update_neighbors()
+                        a_star.astar(win, grid50, start, end, a_star.h_manhattan)
+                # press 'e' to run a* algorithm (euclidean distance)
+                if event.key == pygame.K_e:
+                    if start and end:
+                        grid50.update_neighbors()
+                        a_star.astar(win, grid50, start, end, a_star.h_eucledian)
 
             if pygame.mouse.get_pressed()[0]:  # left click
                 pos = pygame.mouse.get_pos()
