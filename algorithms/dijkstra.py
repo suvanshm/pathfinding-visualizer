@@ -1,6 +1,9 @@
 from collections import deque
 import pygame
 import sys
+import tkinter as tk
+from tkinter import messagebox
+
 
 #TODO: Implement the dijkstra algorithm
 
@@ -31,6 +34,11 @@ def dijkstra(win, grid50, start, end):
                 neighbor.queued = True
                 grid50.draw_grid(win)
         pygame.display.update()
+    # no path found, show error message box 
+    tk.Tk().wm_withdraw()
+    messagebox.showerror('Error', 'No path found')
+    return
+
 
 def reconstruct_path(end, grid50, win):
     current = end

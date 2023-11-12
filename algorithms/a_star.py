@@ -1,6 +1,8 @@
 import heapq
 import pygame
 import sys
+import tkinter as tk
+from tkinter import messagebox
 
 # TODO: Implement A* algorithm
 
@@ -49,6 +51,10 @@ def astar(win, grid50, start, end, heuristic):
                     grid50.draw_grid(win)
                     pygame.display.update()
         pygame.display.update()
+    # no path found, show error message box
+    tk.Tk().wm_withdraw()
+    messagebox.showerror('Error', 'No path found')
+    return
 
 def reconstruct_path(end, grid50, win):
     current = end
