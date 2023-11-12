@@ -1,14 +1,15 @@
 import pygame
 import sys
 import components.grid as grid
+import algorithms.dijkstra as dijkstra
 
 # TODO: This is the server
 # 1. Add a button to select the algorithm
 # 2. You must be able to select the start and end nodes [DONE]
 # 3. You must be able to add barriers [DONE]
 # 4. You must be able to reset the grid [DONE]
-# 5. You must be able to run the visualizer again after it has finished
-# 6. The visualizer must stop once the start and end nodes find each other.
+# 5. You must be able to run the visualizer again after it has finished [DONE]
+# 6. The visualizer must stop once the start and end nodes find each other. [DONE]
 # 7. A path must be drawn from the start node to the end node once the visualizer has finished.
 
 # DIMENSIONS
@@ -43,6 +44,7 @@ def main(win):
             if event.type == pygame.QUIT:  # allows exit
                 pygame.quit()
                 sys.exit()
+
             if event.type == pygame.KEYDOWN:
                 # reset grid with key 'R', keeps walls,target,start
                 if event.key == pygame.K_r:
@@ -55,7 +57,9 @@ def main(win):
                 # press 'd' to run dijkstra's algorithm
                 if event.key == pygame.K_d:
                     if start and end:
-                        grid50.dijkstra(win, grid50, start, end)
+                        grid50.update_neighbors()
+                        dijkstra.dijkstra(win, grid50, start, end)
+
             if pygame.mouse.get_pressed()[0]:  # left click
                 pos = pygame.mouse.get_pos()
                 # check if click in grid
@@ -67,6 +71,7 @@ def main(win):
                         spot.wall = False
                     elif not spot.start and not spot.target:
                         spot.wall = True  # left click resets and sets wall
+
             if pygame.mouse.get_pressed()[2]:  # right click
                 pos = pygame.mouse.get_pos()
                 # check if click in grid
@@ -87,6 +92,19 @@ def main(win):
                     elif not end and not spot.start and not spot.wall:
                         spot.target = True
                         end = spot
+            
+            if event.type == pygame.MOUSEMOTION: 
+                if event.buttons[0]:  # left click and motion
+                    pos = pygame.mouse.get_pos()
+                    # check if click in grid
+                    if pos[0] < WIN_HEIGHT and pos[1] < WIN_HEIGHT:
+                        row = pos[0] // SPOT_SIZE
+                        col = pos[1] // SPOT_SIZE
+                        spot = grid50.grid[row][col]
+                        #if spot.wall: # reset functionality removed
+                            #spot.wall = False
+                        if not spot.start and not spot.target:
+                            spot.wall = True  # left click and motion sets wall
 
         win.fill(colors['BLACK'])  # background fill
         grid50.draw_grid(win)

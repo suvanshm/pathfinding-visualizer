@@ -8,6 +8,7 @@ class Spot:
         self.target = False
         self.wall = False
         self.visited = False
+        self.queued = False
         self.path = False
         self.neighbors = []
         self.previous = None

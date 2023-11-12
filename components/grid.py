@@ -26,6 +26,7 @@ class Grid:
             for spot in row:
                 spot.visited = False
                 spot.path = False
+                spot.queued = False
                 spot.neighbors = []
                 spot.previous = None
     
@@ -37,6 +38,7 @@ class Grid:
                 spot.wall = False
                 spot.visited = False
                 spot.path = False
+                spot.queued = False
                 spot.neighbors = []
                 spot.previous = None
     
@@ -47,12 +49,19 @@ class Grid:
                     spot.draw_spot(window, (200, 0, 0)) # red
                 elif spot.target:
                     spot.draw_spot(window, (0, 200, 0)) # green
-                elif spot.wall:
-                    spot.draw_spot(window, (200, 200, 200)) # white
-                elif spot.visited:
-                    spot.draw_spot(window, (0, 0, 200)) # blue
                 elif spot.path:
                     spot.draw_spot(window, (200, 0, 200)) # purple
+                elif spot.wall:
+                    spot.draw_spot(window, (200, 200, 200)) # white
+                elif spot.queued:
+                    spot.draw_spot(window, (200, 200, 0)) # yellow
+                elif spot.visited:
+                    spot.draw_spot(window, (0, 0, 200)) # blue
                 else:
                     spot.draw_spot(window, (100, 100, 100)) # grey
+    
+    def update_neighbors(self):
+        for row in self.grid:
+            for spot in row:
+                spot.update_neighbors(self.grid)
     
