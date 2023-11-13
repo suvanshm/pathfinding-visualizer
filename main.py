@@ -38,7 +38,7 @@ pygame.display.set_caption('Pathfinding Visualizer')
 
 
 # Creating buttons 
-def button(screen, msg, x, y, w, h, ic, ac, action=None):
+def button_fn(screen, msg, x, y, w, h, ic, ac, action=None):
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
 
@@ -75,19 +75,21 @@ def astar_manhattan_action(win, grid50, start, end, clicked=False):
     if clicked and start and end:
         grid50.reset()
         grid50.update_neighbors()
-        a_star.astar(win, grid50, start, end, a_star.h_manhattan)
+        stats = a_star.astar(win, grid50, start, end, a_star.h_manhattan)
+        return stats
 
 def astar_euclidean_action(win, grid50, start, end, clicked=False):
     if clicked and start and end:
         grid50.reset()
         grid50.update_neighbors()
-        a_star.astar(win, grid50, start, end, a_star.h_eucledian)
+        stats = a_star.astar(win, grid50, start, end, a_star.h_eucledian)
+        return stats
 
 def reset_buttons(win):
     # Reset all buttons to their original color
-    button(win, "Dijkstra", 610, 125, 70, 25, colors['LIGHT_GREY'], colors['RED'])
-    button(win, "A*(Manhattan)", 690, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'])
-    button(win, "A*(Euclidean)", 795, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'])
+    button_fn(win, "Dijkstra", 610, 125, 70, 25, colors['LIGHT_GREY'], colors['RED'])
+    button_fn(win, "A*(Manhattan)", 690, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'])
+    button_fn(win, "A*(Euclidean)", 795, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'])
 
 
 def main(win):
@@ -97,6 +99,18 @@ def main(win):
     end = None
     stats_surface = pygame.Surface((200, 600))  # surface for stats
     prev_stats = None
+
+    buttons = [
+        {"label": "Dijkstra", "x": 610, "y": 125, "width": 70, "height": 25, 
+         "idle_color": colors['LIGHT_GREY'], "active_color": colors['RED'], 
+         "action": lambda: (reset_buttons(win), dijkstra_action(win, grid50, start, end, clicked = True))},
+        {"label": "A*(Manhattan)", "x": 690, "y": 125, "width": 95, "height": 25, 
+         "idle_color": colors['LIGHT_GREY'], "active_color": colors['RED'], 
+         "action": lambda: (reset_buttons(win), astar_manhattan_action(win, grid50, start, end, clicked = True))},
+        {"label": "A*(Euclidean)", "x": 795, "y": 125, "width": 95, "height": 25, 
+         "idle_color": colors['LIGHT_GREY'], "active_color": colors['RED'], 
+         "action": lambda: (reset_buttons(win), astar_euclidean_action(win, grid50, start, end, clicked = True))}
+    ]
 
     while True:
         for event in pygame.event.get():
@@ -211,11 +225,16 @@ def main(win):
         win.blit(seperator, (605, 85))
         win.blit(text_surface4, (605, 105))
 
+        for button in buttons:
+            stats = button_fn(win, button["label"], button["x"], button["y"], button["width"], button["height"], button["idle_color"], button["active_color"], button["action"])
+            if stats:
+                break
+        
         # draw buttons
-        stats = button(win, "Dijkstra", 610, 125, 70, 25, colors['LIGHT_GREY'], colors['RED'], lambda: (reset_buttons(win), dijkstra_action(win, grid50, start, end, clicked = True)))
+        #stats = button(win, "Dijkstra", 610, 125, 70, 25, colors['LIGHT_GREY'], colors['RED'], lambda: (reset_buttons(win), dijkstra_action(win, grid50, start, end, clicked = True)))
         #if stats: print(stats[1])
-        button(win, "A*(Manhattan)", 690, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'], lambda: (reset_buttons(win), astar_manhattan_action(win, grid50, start, end, clicked = True)))
-        button(win, "A*(Euclidean)", 795, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'], lambda: (reset_buttons(win), astar_euclidean_action(win, grid50, start, end, clicked = True)))
+        #stats2 = button(win, "A*(Manhattan)", 690, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'], lambda: (reset_buttons(win), astar_manhattan_action(win, grid50, start, end, clicked = True)))
+        #button(win, "A*(Euclidean)", 795, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'], lambda: (reset_buttons(win), astar_euclidean_action(win, grid50, start, end, clicked = True)))
 
         # draw stats 
         win.blit(seperator, (605, 190))
@@ -229,6 +248,7 @@ def main(win):
         text = f'walls:{grid50.num_wall()}'
         text_surface = statsfont.render(text, True, (255, 255, 255))
         win.blit(text_surface, (605, 250))
+
         if stats != prev_stats and stats:
             stats_surface.fill((0, 0, 0))  # clear the stats surface
             y_offset = 0  # start at the top of the surface
@@ -237,9 +257,9 @@ def main(win):
                 stats_surface.blit(stat_text, (0, y_offset))
                 y_offset += 20
             prev_stats = stats  # update the previous stats
+
         win.blit(stats_surface, (605, 270))
         grid50.draw_grid(win)
         pygame.display.update()
-
 
 main(window)

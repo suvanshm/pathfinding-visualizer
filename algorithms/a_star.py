@@ -3,6 +3,7 @@ import pygame
 import sys
 import tkinter as tk
 from tkinter import messagebox
+import time
 
 # TODO: Implement A* algorithm
 
@@ -17,6 +18,10 @@ def h_eucledian(spot, target):
     return ((spot.row - target.row)**2 + (spot.col - target.col)**2)**0.5
 
 def astar(win, grid50, start, end, heuristic):
+    start_time = time.time()
+    stats = {}
+    stats['total visited'] = 0
+    stats['heuristic'] = heuristic.__name__[2:]
     count = 0
     open_set = []
     g_score = {spot: float('inf') for row in grid50.grid for spot in row}
@@ -33,11 +38,14 @@ def astar(win, grid50, start, end, heuristic):
                 sys.exit()
 
         current = heapq.heappop(open_set)[2]
+        stats['total visited'] += 1
         current.queued = False
         current.visited = True
         if current == end:
-            reconstruct_path(end, grid50, win)
-            return
+            path_len = reconstruct_path(end, grid50, win)
+            stats['path length'] = path_len
+            stats['time'] = round(time.time() - start_time, 2)
+            return stats
         for neighbor in current.neighbors:
             temp_g = g_score[current] + 1
             if temp_g < g_score[neighbor]:
@@ -64,9 +72,12 @@ def astar(win, grid50, start, end, heuristic):
     return
 
 def reconstruct_path(end, grid50, win):
+    path_len = 0
     current = end
     while current.previous:
         current.path = True
+        path_len += 1
         grid50.draw_grid(win)
         pygame.display.update()
         current = current.previous
+    return path_len

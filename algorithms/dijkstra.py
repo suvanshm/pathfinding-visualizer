@@ -3,6 +3,7 @@ import pygame
 import sys
 import tkinter as tk
 from tkinter import messagebox
+import time
 
 
 #TODO: Implement the dijkstra algorithm
@@ -12,10 +13,12 @@ from tkinter import messagebox
 # screen to visualize the algorithm in action in the dijkstra function
 
 def dijkstra(win, grid50, start, end):
+    start_time = time.time()
     queue = deque()
     queue.append(start)
     start.visited = True
     stats = {}
+    stats['total visited'] = 1
     while queue:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # allows exit
@@ -26,12 +29,14 @@ def dijkstra(win, grid50, start, end):
         current.queued = False
         if current == end:
             path_len = reconstruct_path(end, grid50, win)
-            stats['path_len'] = path_len
+            stats['path length'] = path_len
+            stats['time'] = round(time.time() - start_time, 2)
             return stats
 
         for neighbor in current.neighbors:
             if not neighbor.visited:
                 neighbor.visited = True
+                stats['total visited'] += 1
                 neighbor.previous = current
                 queue.append(neighbor)
                 neighbor.queued = True
