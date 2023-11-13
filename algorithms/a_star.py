@@ -50,6 +50,13 @@ def astar(win, grid50, start, end, heuristic):
                     neighbor.queued = True
                     grid50.draw_grid(win)
                     pygame.display.update()
+        
+        instructionsfont = pygame.font.SysFont('courier', 16)
+        text = f'searching using A*({heuristic.__name__[2:]})'
+        text_surface = instructionsfont.render(text, True, (255, 255, 255)) # white
+        # draw rectangle to cover up previous text 
+        pygame.draw.rect(win, (0, 0, 0), (600, 100, 300, 30))
+        win.blit(text_surface, (605, 105))
         pygame.display.update()
     # no path found, show error message box
     tk.Tk().wm_withdraw()
