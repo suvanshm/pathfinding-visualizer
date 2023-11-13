@@ -1,4 +1,7 @@
 import pygame
+pygame.init()
+pygame.font.init()
+
 import sys
 import components.grid as grid
 import algorithms.dijkstra as dijkstra
@@ -14,7 +17,7 @@ import algorithms.a_star as a_star
 # 7. A path must be drawn from the start node to the end node once the visualizer has finished. [DONE]
 
 # DIMENSIONS
-MENU_OFFSET = 200  # side menu for buttons and stats
+MENU_OFFSET = 300  # side menu for buttons and stats
 WIN_HEIGHT = 600  # square grid size in px
 WIN_WIDTH = WIN_HEIGHT + MENU_OFFSET
 N_SPOTS = 50  # no. of spots in each row and col
@@ -32,6 +35,55 @@ colors = {
 # Creating Window
 window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
 pygame.display.set_caption('Pathfinding Visualizer')
+
+
+# Creating buttons 
+def button(screen, msg, x, y, w, h, ic, ac, action=None):
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+
+    if x + w > mouse[0] > x and y + h > mouse[1] > y:
+        pygame.draw.rect(screen, ac, (x, y, w, h))
+        if click[0] == 1 and action != None:
+            pygame.time.delay(300)
+            action()
+    else:
+        pygame.draw.rect(screen, ic, (x, y, w, h))
+
+    smallText = pygame.font.SysFont('courier', 12)
+    textSurf, textRect = text_objects(msg, smallText)
+    textRect.center = ((x + (w / 2)), (y + (h / 2)))
+    screen.blit(textSurf, textRect)
+
+def text_objects(text, font):
+    textSurface = font.render(text, True, (0, 0, 0)) 
+    return textSurface, textSurface.get_rect()
+
+
+
+# button action functions 
+def dijkstra_action(win, grid50, start, end, clicked=False):
+    if clicked:
+        if start and end:
+            grid50.reset()
+            grid50.update_neighbors()
+            dijkstra.dijkstra(win, grid50, start, end) 
+
+def astar_manhattan_action(win, grid50, start, end, clicked=False):
+    if clicked and start and end:
+        grid50.reset()
+        grid50.update_neighbors()
+        a_star.astar(win, grid50, start, end, a_star.h_manhattan)
+
+def astar_euclidean_action(win, grid50, start, end, clicked=False):
+    if clicked and start and end:
+        grid50.reset()
+        grid50.update_neighbors()
+        a_star.astar(win, grid50, start, end, a_star.h_eucledian)
+
+
+
+
 
 
 def main(win):
@@ -66,18 +118,20 @@ def main(win):
                     if start and end:
                         grid50.reset()
                         grid50.update_neighbors()
-                        a_star.astar(win, grid50, start, end, a_star.h_manhattan)
+                        a_star.astar(win, grid50, start,
+                                     end, a_star.h_manhattan)
                 # press 'e' to run a* algorithm (euclidean distance)
                 if event.key == pygame.K_e:
                     if start and end:
                         grid50.reset()
                         grid50.update_neighbors()
-                        a_star.astar(win, grid50, start, end, a_star.h_eucledian)
+                        a_star.astar(win, grid50, start,
+                                     end, a_star.h_eucledian)
 
             if pygame.mouse.get_pressed()[0]:  # left click
                 pos = pygame.mouse.get_pos()
                 # check if click in grid
-                if pos[0] < WIN_HEIGHT and pos[1] < WIN_HEIGHT:
+                if 0 <= pos[0] < WIN_HEIGHT and 0 <= pos[1] < WIN_HEIGHT:
                     row = pos[0] // SPOT_SIZE
                     col = pos[1] // SPOT_SIZE
                     spot = grid50.grid[row][col]
@@ -89,7 +143,7 @@ def main(win):
             if pygame.mouse.get_pressed()[2]:  # right click
                 pos = pygame.mouse.get_pos()
                 # check if click in grid
-                if pos[0] < WIN_HEIGHT and pos[1] < WIN_HEIGHT:
+                if 0 <= pos[0] < WIN_HEIGHT and 0 <= pos[1] < WIN_HEIGHT:
                     row = pos[0] // SPOT_SIZE
                     col = pos[1] // SPOT_SIZE
                     spot = grid50.grid[row][col]
@@ -106,21 +160,50 @@ def main(win):
                     elif not end and not spot.start and not spot.wall:
                         spot.target = True
                         end = spot
-            
-            if event.type == pygame.MOUSEMOTION: 
+
+            if event.type == pygame.MOUSEMOTION:
                 if event.buttons[0]:  # left click and motion
                     pos = pygame.mouse.get_pos()
                     # check if click in grid
-                    if pos[0] < WIN_HEIGHT and pos[1] < WIN_HEIGHT:
+                    if 0 <= pos[0] < WIN_HEIGHT and 0 <= pos[1] < WIN_HEIGHT:
                         row = pos[0] // SPOT_SIZE
                         col = pos[1] // SPOT_SIZE
                         spot = grid50.grid[row][col]
-                        #if spot.wall: # reset functionality removed
-                            #spot.wall = False
+                        # if spot.wall: # reset functionality removed
+                        # spot.wall = False
                         if not spot.start and not spot.target:
                             spot.wall = True  # left click and motion sets wall
 
         win.fill(colors['BLACK'])  # background fill
+
+        # draw title
+        titlefont = pygame.font.SysFont('courier', 22)
+        text_surface = titlefont.render('pathfinding visualizer', True, (255, 255, 255))
+        win.blit(text_surface, (605, 10))
+        seperator = titlefont.render('----------------------', True, (255, 255, 255))
+        win.blit(seperator, (605, 30))
+
+        # draw instructions
+        instructionsfont = pygame.font.SysFont('courier', 16)
+        instructions = 'left-click: toggle wall' 
+        instr2 = 'right-click: toggle start/end'
+        instr3 = 'r: reset algo, c: clear grid'
+        instr4 = 'click algo button to start:'
+        text_surface = instructionsfont.render(instructions, True, (255, 255, 255))
+        text_surface2 = instructionsfont.render(instr2, True, (255, 255, 255))
+        text_surface3 = instructionsfont.render(instr3, True, (255, 255, 255))
+        text_surface4 = instructionsfont.render(instr4, True, (255, 255, 255))
+        win.blit(text_surface, (605, 45))
+        win.blit(text_surface2, (605, 60))
+        win.blit(text_surface3, (605, 75))
+        win.blit(seperator, (605, 85))
+        win.blit(text_surface4, (605, 105))
+
+        # draw buttons
+        button(win, "Dijkstra", 610, 130, 70, 25, colors['LIGHT_GREY'], colors['RED'], lambda: dijkstra_action(win, grid50, start, end, clicked = True))
+        button(win, "A*(Manhattan)", 690, 130, 95, 25, colors['LIGHT_GREY'], colors['RED'], lambda: astar_manhattan_action(win, grid50, start, end, clicked = True))
+        button(win, "A*(Euclidean)", 795, 130, 95, 25, colors['LIGHT_GREY'], colors['RED'], lambda: astar_euclidean_action(win, grid50, start, end, clicked = True))
+
         grid50.draw_grid(win)
         pygame.display.update()
 
