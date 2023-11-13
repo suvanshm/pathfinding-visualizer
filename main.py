@@ -6,6 +6,7 @@ import sys
 import components.grid as grid
 import algorithms.dijkstra as dijkstra
 import algorithms.a_star as a_star
+import algorithms.dfs as dfs
 
 
 # DIMENSIONS
@@ -60,7 +61,6 @@ def dijkstra_action(win, grid50, start, end, clicked=False):
             grid50.reset()
             grid50.update_neighbors()
             stats = dijkstra.dijkstra(win, grid50, start, end) 
-            #print(stats)
             return stats
 
 def astar_manhattan_action(win, grid50, start, end, clicked=False):
@@ -145,6 +145,13 @@ def main(win):
                         grid50.update_neighbors()
                         a_star.astar(win, grid50, start,
                                      end, a_star.h_eucledian)
+                # press 'f' for depth first search
+                if event.key == pygame.K_f:
+                    if start and end:
+                        grid50.reset()
+                        print('running dfs')
+                        grid50.update_neighbors()
+                        dfs.dfs(win, grid50, start, end)
 
             if pygame.mouse.get_pressed()[0]:  # left click
                 pos = pygame.mouse.get_pos()
