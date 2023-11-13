@@ -77,11 +77,19 @@ def astar_euclidean_action(win, grid50, start, end, clicked=False):
         stats = a_star.astar(win, grid50, start, end, a_star.h_eucledian)
         return stats
 
+def dfs_action(win, grid50, start, end, clicked=False):
+    if clicked and start and end:
+        grid50.reset()
+        grid50.update_neighbors()
+        stats = dfs.dfs(win, grid50, start, end)
+        return stats
+
 def reset_buttons(win):
     # Reset all buttons to their original color
     button_fn(win, "Dijkstra", 610, 125, 70, 25, colors['LIGHT_GREY'], colors['RED'])
     button_fn(win, "A*(Manhattan)", 690, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'])
     button_fn(win, "A*(Euclidean)", 795, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'])
+    button_fn(win, "DFS", 610, 155, 50, 25, colors['LIGHT_GREY'], colors['RED'])
 
 
 def main(win):
@@ -101,7 +109,10 @@ def main(win):
          "action": lambda: (reset_buttons(win), astar_manhattan_action(win, grid50, start, end, clicked = True))},
         {"label": "A*(Euclidean)", "x": 795, "y": 125, "width": 95, "height": 25, 
          "idle_color": colors['LIGHT_GREY'], "active_color": colors['RED'], 
-         "action": lambda: (reset_buttons(win), astar_euclidean_action(win, grid50, start, end, clicked = True))}
+         "action": lambda: (reset_buttons(win), astar_euclidean_action(win, grid50, start, end, clicked = True))},
+        {"label": "DFS", "x": 610, "y": 155, "width": 50, "height": 25,
+        "idle_color": colors['LIGHT_GREY'], "active_color": colors['RED'], 
+        "action": lambda: (reset_buttons(win), dfs_action(win, grid50, start, end, clicked = True))}
     ]
 
     while True:
@@ -237,11 +248,11 @@ def main(win):
         win.blit(text_surface, (605, 210))
 
         if start and end:
-            text = f'start:({start.col}, {start.row}), end:({end.col}, {end.row})'
+            text = f'start:({start.col+1}, {start.row+1}), end:({end.col+1}, {end.row+1})'
         elif start:
-            text = f'start:({start.col}, {start.row}), end:({end})'
+            text = f'start:({start.col+1}, {start.row+1}), end:({end})'
         elif end: 
-            text = f'start:({start}), end:({end.col}, {end.row})'
+            text = f'start:({start}), end:({end.col+1}, {end.row+1})'
         else:
             text = f'start:({start}), end:({end})'
         
