@@ -8,7 +8,7 @@ import algorithms.dijkstra as dijkstra
 import algorithms.a_star as a_star
 
 # TODO: This is the server
-# 1. Add a button to select the algorithm [can toggle from keyboard, yet to add buttons in UI]
+# 1. Add a button to select the algorithm [DONE]
 # 2. You must be able to select the start and end nodes [DONE]
 # 3. You must be able to add barriers [DONE]
 # 4. You must be able to reset the grid [DONE]
@@ -46,7 +46,7 @@ def button(screen, msg, x, y, w, h, ic, ac, action=None):
         pygame.draw.rect(screen, ac, (x, y, w, h))
         if click[0] == 1 and action != None:
             pygame.time.delay(300)
-            action()
+            return action()
     else:
         pygame.draw.rect(screen, ic, (x, y, w, h))
 
@@ -67,7 +67,9 @@ def dijkstra_action(win, grid50, start, end, clicked=False):
         if start and end:
             grid50.reset()
             grid50.update_neighbors()
-            dijkstra.dijkstra(win, grid50, start, end) 
+            stats = dijkstra.dijkstra(win, grid50, start, end) 
+            #print(stats)
+            return stats
 
 def astar_manhattan_action(win, grid50, start, end, clicked=False):
     if clicked and start and end:
@@ -81,9 +83,11 @@ def astar_euclidean_action(win, grid50, start, end, clicked=False):
         grid50.update_neighbors()
         a_star.astar(win, grid50, start, end, a_star.h_eucledian)
 
-
-
-
+def reset_buttons(win):
+    # Reset all buttons to their original color
+    button(win, "Dijkstra", 610, 125, 70, 25, colors['LIGHT_GREY'], colors['RED'])
+    button(win, "A*(Manhattan)", 690, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'])
+    button(win, "A*(Euclidean)", 795, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'])
 
 
 def main(win):
@@ -91,6 +95,8 @@ def main(win):
     grid50 = grid.Grid(N_SPOTS)
     start = None
     end = None
+    stats_surface = pygame.Surface((200, 600))  # surface for stats
+    prev_stats = None
 
     while True:
         for event in pygame.event.get():
@@ -200,10 +206,32 @@ def main(win):
         win.blit(text_surface4, (605, 105))
 
         # draw buttons
-        button(win, "Dijkstra", 610, 130, 70, 25, colors['LIGHT_GREY'], colors['RED'], lambda: dijkstra_action(win, grid50, start, end, clicked = True))
-        button(win, "A*(Manhattan)", 690, 130, 95, 25, colors['LIGHT_GREY'], colors['RED'], lambda: astar_manhattan_action(win, grid50, start, end, clicked = True))
-        button(win, "A*(Euclidean)", 795, 130, 95, 25, colors['LIGHT_GREY'], colors['RED'], lambda: astar_euclidean_action(win, grid50, start, end, clicked = True))
+        stats = button(win, "Dijkstra", 610, 125, 70, 25, colors['LIGHT_GREY'], colors['RED'], lambda: (reset_buttons(win), dijkstra_action(win, grid50, start, end, clicked = True)))
+        #if stats: print(stats[1])
+        button(win, "A*(Manhattan)", 690, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'], lambda: (reset_buttons(win), astar_manhattan_action(win, grid50, start, end, clicked = True)))
+        button(win, "A*(Euclidean)", 795, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'], lambda: (reset_buttons(win), astar_euclidean_action(win, grid50, start, end, clicked = True)))
 
+        # draw stats 
+        win.blit(seperator, (605, 190))
+        statsfont = pygame.font.SysFont('courier', 16)
+        text = 'stats/info:' 
+        text_surface = statsfont.render(text, True, (255, 255, 255)) 
+        win.blit(text_surface, (605, 210))
+        text = f'start:{start}, end:{end}'
+        text_surface = statsfont.render(text, True, (255, 255, 255))
+        win.blit(text_surface, (605, 230))
+        text = f'walls:{grid50.num_wall()}'
+        text_surface = statsfont.render(text, True, (255, 255, 255))
+        win.blit(text_surface, (605, 250))
+        if stats != prev_stats and stats:
+            stats_surface.fill((0, 0, 0))  # clear the stats surface
+            y_offset = 0  # start at the top of the surface
+            for stat, value in stats[1].items():
+                stat_text = statsfont.render(f'{stat}: {value}', True, (255, 255, 255))
+                stats_surface.blit(stat_text, (0, y_offset))
+                y_offset += 20
+            prev_stats = stats  # update the previous stats
+        win.blit(stats_surface, (605, 270))
         grid50.draw_grid(win)
         pygame.display.update()
 

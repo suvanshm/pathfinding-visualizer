@@ -14,7 +14,7 @@ class Spot:
         self.previous = None
 
     def __repr__(self) -> str:
-        return f'Spot({self.row}, {self.col})'
+        return f'({self.row}, {self.col})'
     
     def draw_spot(self, window, color):
         from main import SPOT_SIZE
@@ -31,5 +31,4 @@ class Spot:
                 self.neighbors.append(grid[self.row][self.col + 1])
             if self.col > 0 and not grid[self.row][self.col - 1].wall: # LEFT
                 self.neighbors.append(grid[self.row][self.col - 1])
-        
-        
+

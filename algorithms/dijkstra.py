@@ -15,6 +15,7 @@ def dijkstra(win, grid50, start, end):
     queue = deque()
     queue.append(start)
     start.visited = True
+    stats = {}
     while queue:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # allows exit
@@ -24,8 +25,10 @@ def dijkstra(win, grid50, start, end):
         current = queue.popleft()
         current.queued = False
         if current == end:
-            reconstruct_path(end, grid50, win)
-            return
+            path_len = reconstruct_path(end, grid50, win)
+            stats['path_len'] = path_len
+            return stats
+
         for neighbor in current.neighbors:
             if not neighbor.visited:
                 neighbor.visited = True
@@ -40,18 +43,39 @@ def dijkstra(win, grid50, start, end):
         # draw rectangle to cover up previous text 
         pygame.draw.rect(win, (0, 0, 0), (600, 100, 300, 30))
         win.blit(text_surface, (605, 105))
+
+        # draw rectangle to cover up previous stats
+        pygame.draw.rect(win, (0, 0, 0), (600, 190, 300, 100))
+        # draw stats 
+        titlefont = pygame.font.SysFont('courier', 22)
+        seperator = titlefont.render('----------------------', True, (255, 255, 255))
+        win.blit(seperator, (605, 190))
+        statsfont = pygame.font.SysFont('courier', 16)
+        text = 'stats/info:' 
+        text_surface = statsfont.render(text, True, (255, 255, 255)) 
+        win.blit(text_surface, (605, 210))
+        text = f'start:{start}, end:{end}'
+        text_surface = statsfont.render(text, True, (255, 255, 255))
+        win.blit(text_surface, (605, 230))
+        text = f'walls:{grid50.num_wall()}'
+        text_surface = statsfont.render(text, True, (255, 255, 255))
+        win.blit(text_surface, (605, 250))
+
         pygame.display.update()
     
     # no path found, show error message box 
     tk.Tk().wm_withdraw()
     messagebox.showerror('Error', 'No path found')
-    return
+    return stats
 
 
 def reconstruct_path(end, grid50, win):
+    path_len = 0
     current = end
     while current.previous:
         current.path = True
         grid50.draw_grid(win)
         pygame.display.update()
+        path_len += 1
         current = current.previous
+    return path_len

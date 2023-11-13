@@ -65,3 +65,11 @@ class Grid:
             for spot in row:
                 spot.update_neighbors(self.grid)
     
+    def num_wall(self):
+        count = 0
+        for row in self.grid:
+            for spot in row:
+                if spot.wall:
+                    count += 1
+        return count
+    
