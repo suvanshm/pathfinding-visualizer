@@ -108,11 +108,17 @@ def main(win):
                 # reset grid with key 'R', keeps walls,target,start
                 if event.key == pygame.K_r:
                     grid50.reset()
+                    # reset stats
+                    stats_surface.fill((0, 0, 0))
+                    prev_stats = None
                 # clear grid with key 'C', resets everything
                 if event.key == pygame.K_c:
                     grid50.clear()
                     start = None
                     end = None
+                    # reset stats
+                    stats_surface.fill((0, 0, 0))
+                    prev_stats = None
                 # press 'd' to run dijkstra's algorithm
                 if event.key == pygame.K_d:
                     if start and end:
