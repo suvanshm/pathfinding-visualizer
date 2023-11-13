@@ -7,14 +7,6 @@ import components.grid as grid
 import algorithms.dijkstra as dijkstra
 import algorithms.a_star as a_star
 
-# TODO: This is the server
-# 1. Add a button to select the algorithm [DONE]
-# 2. You must be able to select the start and end nodes [DONE]
-# 3. You must be able to add barriers [DONE]
-# 4. You must be able to reset the grid [DONE]
-# 5. You must be able to run the visualizer again after it has finished [DONE]
-# 6. The visualizer must stop once the start and end nodes find each other. [DONE]
-# 7. A path must be drawn from the start node to the end node once the visualizer has finished. [DONE]
 
 # DIMENSIONS
 MENU_OFFSET = 300  # side menu for buttons and stats
@@ -230,19 +222,13 @@ def main(win):
             if stats:
                 break
         
-        # draw buttons
-        #stats = button(win, "Dijkstra", 610, 125, 70, 25, colors['LIGHT_GREY'], colors['RED'], lambda: (reset_buttons(win), dijkstra_action(win, grid50, start, end, clicked = True)))
-        #if stats: print(stats[1])
-        #stats2 = button(win, "A*(Manhattan)", 690, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'], lambda: (reset_buttons(win), astar_manhattan_action(win, grid50, start, end, clicked = True)))
-        #button(win, "A*(Euclidean)", 795, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'], lambda: (reset_buttons(win), astar_euclidean_action(win, grid50, start, end, clicked = True)))
-
         # draw stats 
         win.blit(seperator, (605, 190))
         statsfont = pygame.font.SysFont('courier', 16)
         text = 'stats/info:' 
         text_surface = statsfont.render(text, True, (255, 255, 255)) 
         win.blit(text_surface, (605, 210))
-        
+
         if start and end:
             text = f'start:({start.col}, {start.row}), end:({end.col}, {end.row})'
         elif start:
