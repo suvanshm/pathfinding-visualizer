@@ -242,7 +242,16 @@ def main(win):
         text = 'stats/info:' 
         text_surface = statsfont.render(text, True, (255, 255, 255)) 
         win.blit(text_surface, (605, 210))
-        text = f'start:{start}, end:{end}'
+        
+        if start and end:
+            text = f'start:({start.col}, {start.row}), end:({end.col}, {end.row})'
+        elif start:
+            text = f'start:({start.col}, {start.row}), end:({end})'
+        elif end: 
+            text = f'start:({start}), end:({end.col}, {end.row})'
+        else:
+            text = f'start:({start}), end:({end})'
+        
         text_surface = statsfont.render(text, True, (255, 255, 255))
         win.blit(text_surface, (605, 230))
         text = f'walls:{grid50.num_wall()}'

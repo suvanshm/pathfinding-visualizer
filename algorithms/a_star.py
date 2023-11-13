@@ -31,6 +31,7 @@ def astar(win, grid50, start, end, heuristic):
 
     heapq.heappush(open_set, (0, count, start))
     start.queued = True
+    stats['max queue size'] = 1
     while open_set:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # allows exit
@@ -55,6 +56,7 @@ def astar(win, grid50, start, end, heuristic):
                 if not neighbor.queued:
                     count += 1
                     heapq.heappush(open_set, (f_score[neighbor], count, neighbor))
+                    stats['max queue size'] = max(stats['max queue size'], len(open_set))
                     neighbor.queued = True
                     grid50.draw_grid(win)
                     pygame.display.update()

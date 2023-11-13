@@ -19,6 +19,7 @@ def dijkstra(win, grid50, start, end):
     start.visited = True
     stats = {}
     stats['total visited'] = 1
+    stats['max queue size'] = 1
     while queue:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # allows exit
@@ -39,6 +40,7 @@ def dijkstra(win, grid50, start, end):
                 stats['total visited'] += 1
                 neighbor.previous = current
                 queue.append(neighbor)
+                stats['max queue size'] = max(stats['max queue size'], len(queue))
                 neighbor.queued = True
                 grid50.draw_grid(win)
         
