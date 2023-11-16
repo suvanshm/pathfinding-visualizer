@@ -7,7 +7,7 @@ import components.grid as grid
 import algorithms.dijkstra as dijkstra
 import algorithms.a_star as a_star
 import algorithms.dfs as dfs
-
+import algorithms.bidirectional_bfs as bidirectional_bfs
 
 # DIMENSIONS
 MENU_OFFSET = 300  # width of side menu for buttons and stats
@@ -148,6 +148,26 @@ def dfs_action(win, grid50, start, end, clicked=False):
         stats = dfs.dfs(win, grid50, start, end)
         return stats
 
+def bidirectional_BFS_action(win, grid50, start, end, clicked=False):
+    """
+    Runs the bidirectional BFS algorithm on the given grid and returns statistics about the search.
+
+    Args:
+        win (pygame.Surface): The Pygame window surface to draw the grid on.
+        grid50 (Grid): The grid object to run the search on.
+        start (Spot): The starting node for the search.
+        end (Spot): The ending node for the search.
+        clicked (bool, optional): Whether the function was called due to a mouse click. Defaults to False.
+
+    Returns:
+        stats: A dictionary containing statistics about the search, including the number of nodes visited and the path found.
+    """
+    if clicked and start and end:
+        grid50.reset()
+        grid50.update_neighbors()
+        stats = bidirectional_bfs.bidirectional_BFS(win, grid50, start, end)
+        return stats
+
 def reset_buttons(win):
     """
     Redraws all buttons. This is called alongside the action buttons whenever a button is clicked. 
@@ -168,6 +188,7 @@ def reset_buttons(win):
     button_fn(win, "A*(Manhattan)", 690, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'])
     button_fn(win, "A*(Euclidean)", 795, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'])
     button_fn(win, "DFS", 610, 155, 50, 25, colors['LIGHT_GREY'], colors['RED'])
+    button_fn(win, "Bidirectional BFS", 665, 155, 125, 25, colors['LIGHT_GREY'], colors['RED'])
 
 
 def main(win): 
@@ -211,7 +232,10 @@ def main(win):
          "action": lambda: (reset_buttons(win), astar_euclidean_action(win, grid50, start, end, clicked = True))},
         {"label": "DFS", "x": 610, "y": 155, "width": 50, "height": 25,
         "idle_color": colors['LIGHT_GREY'], "active_color": colors['RED'], 
-        "action": lambda: (reset_buttons(win), dfs_action(win, grid50, start, end, clicked = True))}
+        "action": lambda: (reset_buttons(win), dfs_action(win, grid50, start, end, clicked = True))}, 
+        {"label": "2-side BFS", "x": 665, "y": 155, "width": 75, "height": 25,
+        "idle_color": colors['LIGHT_GREY'], "active_color": colors['RED'],
+        "action": lambda: (reset_buttons(win), bidirectional_BFS_action(win, grid50, start, end, clicked = True))}
     ]
 
     # this is the main loop of the program, it runs until the user exits the program
@@ -239,7 +263,7 @@ def main(win):
                     # reset stats
                     stats_surface.fill((0, 0, 0))
                     prev_stats = None
-                
+
             # left click and motion toggles a spot to be a wall/reset a wall
             if pygame.mouse.get_pressed()[0]:  # left click
                 pos = pygame.mouse.get_pos()
