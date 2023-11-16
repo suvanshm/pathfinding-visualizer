@@ -42,7 +42,7 @@ def dfs(win, grid50, start, end):
     # return error message if no path found
     tk.Tk().wm_withdraw()
     messagebox.showerror('Error', 'No path found')
-    return 
+    return stats
 
 def dfs_alt(win, grid50, start, end, stack = []): 
     start_time = time.time()
