@@ -34,7 +34,7 @@ def dijkstra(win, grid50, start, end):
     stats = {} # dictionary to store stats 
     stats['total visited'] = 1
     stats['max queue size'] = 1
-    
+
     while queue:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # allows exit
@@ -42,11 +42,11 @@ def dijkstra(win, grid50, start, end):
                 sys.exit()
 
         current = queue.popleft()
-        current.queued = False
-        if current == end:
-            path_len = reconstruct_path(end, grid50, win)
+        current.queued = False # color of spot is linked to different attributes so changing them automatically generates the animation
+        if current == end: # found target
+            path_len = reconstruct_path(end, grid50, win) # handles path animation and gets path length
             stats['path length'] = path_len
-            stats['time'] = round(time.time() - start_time, 2)
+            stats['time'] = round(time.time() - start_time, 2) 
             return stats
 
         for neighbor in current.neighbors:
@@ -58,31 +58,16 @@ def dijkstra(win, grid50, start, end):
                 stats['max queue size'] = max(stats['max queue size'], len(queue))
                 neighbor.queued = True
                 grid50.draw_grid(win)
+                pygame.display.update()
         
+        # set up text surface
         instructionsfont = pygame.font.SysFont('courier', 16)
         text = 'searching using dijkstra\'s'
         text_surface = instructionsfont.render(text, True, (255, 255, 255)) # white
         # draw rectangle to cover up previous text 
         pygame.draw.rect(win, (0, 0, 0), (600, 100, 300, 30))
+        # display text "searching using dijkstra's"
         win.blit(text_surface, (605, 105))
-
-        # draw rectangle to cover up previous stats
-        pygame.draw.rect(win, (0, 0, 0), (600, 190, 300, 100))
-        # draw stats 
-        titlefont = pygame.font.SysFont('courier', 22)
-        seperator = titlefont.render('----------------------', True, (255, 255, 255))
-        win.blit(seperator, (605, 190))
-        statsfont = pygame.font.SysFont('courier', 16)
-        text = 'stats/info:' 
-        text_surface = statsfont.render(text, True, (255, 255, 255)) 
-        win.blit(text_surface, (605, 210))
-        text = f'start:{start}, end:{end}'
-        text_surface = statsfont.render(text, True, (255, 255, 255))
-        win.blit(text_surface, (605, 230))
-        text = f'walls:{grid50.num_wall()}'
-        text_surface = statsfont.render(text, True, (255, 255, 255))
-        win.blit(text_surface, (605, 250))
-
         pygame.display.update()
     
     # no path found, show error message box 
@@ -106,7 +91,7 @@ def reconstruct_path(end, grid50, win):
     path_len = 0
     current = end 
     while current.previous:
-        current.path = True
+        current.path = True 
         # after changing state of current, redraw grid and update display, this is what makes the animation work
         grid50.draw_grid(win) 
         pygame.display.update()
