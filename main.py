@@ -188,7 +188,7 @@ def reset_buttons(win):
     button_fn(win, "A*(Manhattan)", 690, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'])
     button_fn(win, "A*(Euclidean)", 795, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'])
     button_fn(win, "DFS", 610, 155, 50, 25, colors['LIGHT_GREY'], colors['RED'])
-    button_fn(win, "Bidirectional BFS", 665, 155, 125, 25, colors['LIGHT_GREY'], colors['RED'])
+    button_fn(win, "2-side BFS", 665, 155, 75, 25, colors['LIGHT_GREY'], colors['RED'])
 
 
 def main(win): 
