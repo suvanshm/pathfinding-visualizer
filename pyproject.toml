@@ -2,13 +2,14 @@
 name = "final-project"
 version = "0.1.0"
 description = ""
-authors = ["You Guang <yokurang@gmail.com>"]
+authors = ["Suvansh Manektala <suvansh.manektala@u.yale-nus.edu.sg>"]
 readme = "README.md"
 packages = [{include = "final_project"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.9"
 pygame = "^2.5.2"
+pytest = "^7.4.3"
 
 
 [build-system]
