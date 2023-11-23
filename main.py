@@ -70,7 +70,7 @@ def button_fn(screen, msg, x, y, w, h, ic, ac, action=None):
 
 def dijkstra_action(win, grid50, start, end, clicked=False):
     """
-    Runs Dijkstra's algorithm on the given grid.
+    Runs Dijkstra's algorithm on the given grid. This is an action function to be fed into the button_fn function.
 
     Args:
         win (pygame.Surface): The Pygame window surface.
@@ -90,7 +90,7 @@ def dijkstra_action(win, grid50, start, end, clicked=False):
 
 def astar_manhattan_action(win, grid50, start, end, clicked=False):
     """
-    Runs the A* algorithm with the Manhattan distance heuristic on the given grid.
+    Runs the A* algorithm with the Manhattan distance heuristic on the given grid. This is an action function to be fed into the button_fn function.
 
     Args:
         win (pygame.Surface): The Pygame window surface.
@@ -110,7 +110,7 @@ def astar_manhattan_action(win, grid50, start, end, clicked=False):
 
 def astar_euclidean_action(win, grid50, start, end, clicked=False):
     """
-    Runs the A* algorithm with the euclidean distance heuristic on the given grid.
+    Runs the A* algorithm with the euclidean distance heuristic on the given grid. This is an action function to be fed into the button_fn function.
 
     Args:
         win (pygame.Surface): The Pygame window surface.
@@ -130,7 +130,7 @@ def astar_euclidean_action(win, grid50, start, end, clicked=False):
 
 def dfs_action(win, grid50, start, end, clicked=False):
     """
-    Runs the depth-first search algorithm on the given grid.
+    Runs the depth-first search algorithm on the given grid. This is an action function to be fed into the button_fn function.
 
     Args:
         win (pygame.Surface): The Pygame window surface.
@@ -150,7 +150,7 @@ def dfs_action(win, grid50, start, end, clicked=False):
 
 def bidirectional_BFS_action(win, grid50, start, end, clicked=False):
     """
-    Runs the bidirectional BFS algorithm on the given grid and returns statistics about the search.
+    Runs the bidirectional BFS algorithm on the given grid and returns statistics about the search. This is an action function to be fed into the button_fn function.
 
     Args:
         win (pygame.Surface): The Pygame window surface to draw the grid on.
@@ -315,7 +315,7 @@ def main(win):
                             spot.wall = True  
 
         
-        # GUI 
+        # -------------- GUI ---------------- 
 
         # fill background with black
         win.fill(colors['BLACK']) 
