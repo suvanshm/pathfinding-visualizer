@@ -7,6 +7,34 @@ This project is a visualization tool for various pathfinding algorithms. It allo
 
 This is the main entry point for the application. Run this script to start the visualizer.
 
+## Components 
+
+### grid.py
+
+The `grid.py` file contains the `Grid` class, which represents a grid of spots. The grid is implemented as a 2D list of `Spot` objects. The `Grid` class has several methods:
+
+- `__init__(self, rows)`: Initializes a `Grid` object with a 2D list of `Spot` objects. The number of rows and columns in the grid is determined by the `rows` parameter.
+
+- `reset()`: Resets all the attributes of each spot in the grid except walls, start, and target. This method is useful for repeating visualizations with the same grid pattern.
+
+- `clear()`: Clears the grid by resetting all spot attributes to their default values.
+
+- `draw_grid(window)`: Draws the grid on the given window, with each spot colored according to its state. 
+
+- `update_neighbors()`: Updates the neighbors of each spot in the grid based on the current state of the grid. Calls the corresponding spot function for each spot in the grid.
+
+- `num_wall()`: Returns the number of wall spots in the grid, for displaying in stats menu. 
+
+### spot.py
+
+The `spot.py` file contains the `Spot` class, which represents a single spot or node on the grid. The `Spot` class has several attributes and methods:
+
+- `__init__(self, row, col)`: Initializes a `Spot` object with the given row and column coordinates. It also initializes several other attributes such as `start`, `target`, `wall`, `visited`, `queued`, `path`, `neighbors`, and `previous`.
+
+- `draw_spot(self, window, color)`: Draws the `Spot` on the given window with the specified color. The position of the spot is determined by its row and column attributes.
+
+- `update_neighbors(self, grid)`: Updates the list of neighboring spots for the current spot based on the given grid. A neighbor is considered valid if it is not a wall and is within the bounds of the grid.
+
 ## Algorithms 
 
 This project includes several different pathfinding algorithms, each in its own Python script.
