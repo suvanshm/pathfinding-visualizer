@@ -35,7 +35,7 @@ def button_fn(screen, msg, x, y, w, h, ic, ac, action=None):
     Draws a button on the screen with the given parameters and returns the stats from the action function if the button is clicked.
 
     Args:
-    screen: pygame.Surface object representing the game window
+    screen: pygame.display object representing the game window
     msg: string representing the text to be displayed on the button
     x: integer representing the x-coordinate of the top-left corner of the button
     y: integer representing the y-coordinate of the top-left corner of the button
@@ -73,7 +73,7 @@ def dijkstra_action(win, grid50, start, end, clicked=False):
     Runs Dijkstra's algorithm on the given grid. This is an action function to be fed into the button_fn function.
 
     Args:
-        win (pygame.Surface): The Pygame window surface.
+        win (pygame.display): The Pygame window surface.
         grid50 (Grid): The grid object representing the game board.
         start (Spot): The starting node for Dijkstra's algorithm.
         end (Spot): The ending node for Dijkstra's algorithm.
@@ -93,7 +93,7 @@ def astar_manhattan_action(win, grid50, start, end, clicked=False):
     Runs the A* algorithm with the Manhattan distance heuristic on the given grid. This is an action function to be fed into the button_fn function.
 
     Args:
-        win (pygame.Surface): The Pygame window surface.
+        win (pygame.display): The Pygame window surface.
         grid50 (Grid): The grid object representing the game board.
         start (Spot): The starting node for the A* algorithm.
         end (Spot): The ending node for the A* algorithm.
@@ -113,7 +113,7 @@ def astar_euclidean_action(win, grid50, start, end, clicked=False):
     Runs the A* algorithm with the euclidean distance heuristic on the given grid. This is an action function to be fed into the button_fn function.
 
     Args:
-        win (pygame.Surface): The Pygame window surface.
+        win (pygame.display): The Pygame window surface.
         grid50 (Grid): The grid object representing the game board.
         start (Spot): The starting node for the A* algorithm.
         end (Spot): The ending node for the A* algorithm.
@@ -133,7 +133,7 @@ def dfs_action(win, grid50, start, end, clicked=False):
     Runs the depth-first search algorithm on the given grid. This is an action function to be fed into the button_fn function.
 
     Args:
-        win (pygame.Surface): The Pygame window surface.
+        win (pygame.display): The Pygame window surface.
         grid50 (Grid): The grid object representing the game board.
         start (Spot): The starting node for the DFS algorithm.
         end (Spot): The ending node for the DFS algorithm.
@@ -153,7 +153,7 @@ def bidirectional_BFS_action(win, grid50, start, end, clicked=False):
     Runs the bidirectional BFS algorithm on the given grid and returns statistics about the search. This is an action function to be fed into the button_fn function.
 
     Args:
-        win (pygame.Surface): The Pygame window surface to draw the grid on.
+        win (pygame.display): The Pygame window surface to draw the grid on.
         grid50 (Grid): The grid object to run the search on.
         start (Spot): The starting node for the search.
         end (Spot): The ending node for the search.
@@ -170,8 +170,10 @@ def bidirectional_BFS_action(win, grid50, start, end, clicked=False):
 
 def reset_buttons(win):
     """
-    Redraws all buttons. This is called alongside the action buttons whenever a button is clicked. 
-    This is needed to fix a graphics glitch. Without this, if an algorithm button is clicked, it hides all the other buttons,
+    Redraws all buttons. This is called alongside the action buttons whenever a button is clicked. Firstly, it locks the buttons 
+    so that the user cannot click another button while an algorithm is running, we do this by calling button_fn for each button again 
+    but without passing in an action function.
+    This is also needed to fix a graphics glitch. Without this, if an algorithm button is clicked, it hides all the other buttons,
     and makes the menu display look odd.
 
     Parameters:
