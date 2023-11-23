@@ -10,6 +10,7 @@ packages = [{include = "final_project"}]
 python = "^3.9"
 pygame = "^2.5.2"
 pytest = "^7.4.3"
+dijkstar = "^2.6.0"
 
 
 [build-system]
