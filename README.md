@@ -3,13 +3,56 @@ by Jakub, Jerry and Suvansh
 
 This project is a visualization tool for various pathfinding algorithms. It allows you to choose an algorithm, set a start and end point, and watch as the algorithm finds the shortest path between the two points.
 
-## main.py 
+## How to Use
+
+To use the visualizer, run the `main.py` script. The dependencies are listed in the pyproject.toml file.
+Use right click to toggle start and end nodes, in that order. 
+Use left click to toggle walls, or left click + drag mouse to set multiple walls. 
+Click on the corresponding button to run the the algorithm. 
+Click 'R' to reset the algorithm visualization, retaining the start/end nodes and walls. 
+Click 'C' to clear the visualization and also the start/end nodes and walls. 
+
+Screenshot of inital window: 
+![Screenshot of initial window](assets/pathfinding1.jpg)
+
+Screenshot after walls and start/end has been set: 
+![Screenshot of window with start/end nodes](assets/pathfinding2.jpg)
+
+Screenshot in the middle of pathfinding: 
+![Screenshot of window in the middle of pathfinding](assets/pathfinding3.jpg)
+
+Screenshot of final result after path found:
+![Screenshot of final result](assets/pathfinding4.jpg)
+
+## Project Structure 
+
+### main.py 
 
 This is the main entry point for the application. Run this script to start the visualizer.
 
-## Components 
+### Algorithms 
 
-### grid.py
+This project includes several different pathfinding algorithms, each in its own Python script.
+
+#### djikstra.py 
+
+This script implements Dijkstra's algorithm, a popular algorithm for finding the shortest path in a graph. Dijkstra's algorithm works by assigning a cost to each node, starting with 0 for the initial node and infinity for all others. It then repeatedly selects the node with the smallest cost, updates the costs of its neighbors, and marks it as visited. This process continues until the destination node has been visited. Dijkstra's algorithm is guaranteed to find the shortest path, and its time complexity is O((V+E) log V) where V is the number of vertices and E is the number of edges. We note this time complexity is for an implementation of Djikstra's algorithm with a priority queue to find the node with smallest cost.  In our case, all the weights/costs are the same fixed value across the entire grid. So essentially, a dijkstra implementation reduces down to simply breadth-first search with time complexity O(V+E), we don't even have to use a priority queue since all costs are the same and can use a regular FIFO queue instead. 
+
+#### a_star.py
+
+This script implements the A* algorithm, which is a more efficient algorithm for pathfinding that uses heuristics to guide its search. The A* algorithm works similarly to Dijkstra's algorithm, but in addition to the cost of reaching a node, it also considers an estimate of the cost to reach the destination from that node (the heuristic). This project includes two heuristics: the Manhattan distance, which is the sum of the absolute differences in the x and y coordinates, and the Euclidean distance, which is the square root of the sum of the squares of the differences in the x and y coordinates. The Manhattan heuristic is more suitable when diagonal movement isn't allowed, whereas the Euclidean heuristic is more suitable when we can move diagonally, you can see this visually too by running the two algorithms one after the other and seeing the difference in the path. The A* algorithm is also guaranteed to find the shortest path when usinge   an admissible heuristic (one that never overestimates the true cost), and its time complexity is O((V+E) log V).
+
+#### dfs.py
+
+This script implements depth-first search, a simple algorithm that can find a path in a graph. Depth-first search works by exploring as far as possible along each branch before backtracking. While depth-first search is not guaranteed to find the shortest path, it is useful for exploring complex structures due to its simplicity and low memory requirements. Its time complexity is O(V + E).
+
+#### bidirectional_bfs.py
+
+This script implements bidirectional breadth-first search, an optimized version of the traditional breadth-first search algorithm. Bidirectional breadth-first search works by simultaneously running two breadth-first searches, one from the start node and one from the end node. When the two searches meet, a path has been found. This can significantly reduce the search space and therefore the time complexity, especially in large graphs. However, it's important to note that this algorithm is not guaranteed to find the shortest path in a graph with weighted edges. Its time complexity is O(V + E) where V is the number of vertices and E is the number of edges.
+
+### Components 
+
+#### grid.py
 
 The `grid.py` file contains the `Grid` class, which represents a grid of spots. The grid is implemented as a 2D list of `Spot` objects. The `Grid` class has several methods:
 
@@ -25,7 +68,7 @@ The `grid.py` file contains the `Grid` class, which represents a grid of spots. 
 
 - `num_wall()`: Returns the number of wall spots in the grid, for displaying in stats menu. 
 
-### spot.py
+#### spot.py
 
 The `spot.py` file contains the `Spot` class, which represents a single spot or node on the grid. The `Spot` class has several attributes and methods:
 
@@ -35,34 +78,9 @@ The `spot.py` file contains the `Spot` class, which represents a single spot or 
 
 - `update_neighbors(self, grid)`: Updates the list of neighboring spots for the current spot based on the given grid. A neighbor is considered valid if it is not a wall and is within the bounds of the grid.
 
-## Algorithms 
+### Tests 
 
-This project includes several different pathfinding algorithms, each in its own Python script.
-
-### djikstra.py 
-
-This script implements Dijkstra's algorithm, a popular algorithm for finding the shortest path in a graph. Dijkstra's algorithm works by assigning a cost to each node, starting with 0 for the initial node and infinity for all others. It then repeatedly selects the node with the smallest cost, updates the costs of its neighbors, and marks it as visited. This process continues until the destination node has been visited. Dijkstra's algorithm is guaranteed to find the shortest path, and its time complexity is O((V+E) log V) where V is the number of vertices and E is the number of edges. We note this time complexity is for an implementation of Djikstra's algorithm with a priority queue to find the node with smallest cost.  In our case, all the weights/costs are the same fixed value across the entire grid. So essentially, a dijkstra implementation reduces down to simply breadth-first search with time complexity O(V+E), we don't even have to use a priority queue since all costs are the same and can use a regular FIFO queue instead. 
-
-### a_star.py
-
-This script implements the A* algorithm, which is a more efficient algorithm for pathfinding that uses heuristics to guide its search. The A* algorithm works similarly to Dijkstra's algorithm, but in addition to the cost of reaching a node, it also considers an estimate of the cost to reach the destination from that node (the heuristic). This project includes two heuristics: the Manhattan distance, which is the sum of the absolute differences in the x and y coordinates, and the Euclidean distance, which is the square root of the sum of the squares of the differences in the x and y coordinates. The Manhattan heuristic is more suitable when diagonal movement isn't allowed, whereas the Euclidean heuristic is more suitable when we can move diagonally, you can see this visually too by running the two algorithms one after the other and seeing the difference in the path. The A* algorithm is also guaranteed to find the shortest path when usinge   an admissible heuristic (one that never overestimates the true cost), and its time complexity is O((V+E) log V).
-
-### dfs.py
-
-This script implements depth-first search, a simple algorithm that can find a path in a graph. Depth-first search works by exploring as far as possible along each branch before backtracking. While depth-first search is not guaranteed to find the shortest path, it is useful for exploring complex structures due to its simplicity and low memory requirements. Its time complexity is O(V + E).
-
-### bidirectional_bfs.py
-
-This script implements bidirectional breadth-first search, an optimized version of the traditional breadth-first search algorithm. Bidirectional breadth-first search works by simultaneously running two breadth-first searches, one from the start node and one from the end node. When the two searches meet, a path has been found. This can significantly reduce the search space and therefore the time complexity, especially in large graphs. However, it's important to note that this algorithm is not guaranteed to find the shortest path in a graph with weighted edges. Its time complexity is O(V + E) where V is the number of vertices and E is the number of edges.
-
-## How to Use
-
-To use the visualizer, run the `main.py` script. The dependencies are listed in the pyproject.toml file.
-Use right click to toggle start and end nodes, in that order. 
-Use left click to toggle walls, or left click + drag mouse to set multiple walls. 
-Click on the corresponding button to run the the algorithm. 
-Click 'R' to reset the algorithm visualization, retaining the start/end nodes and walls. 
-Click 'C' to clear the visualization and also the start/end nodes and walls. 
+The test folder contains individual files for each search algorithm, where we check whether the algorithms are implemented correctly and efficiently. For Dijktra and A*, this is done by comparing our implementation against the built-in implementation using Dijkstar package. For the other two algorithms, the computation was done manually and checked against the algorithm. Edge cases that are tested include no path available and extremely large grid sizes. Call `pytest` in terminal to run the tests. 
 
 ## Encountered Challenges 
 
