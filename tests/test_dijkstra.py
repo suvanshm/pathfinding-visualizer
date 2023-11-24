@@ -18,25 +18,26 @@ def test_dijkstra():
     grid[2][2].wall = True
     grid[3][2].wall = True
     grid[4][2].wall = True
-    grid[5][2].wall = True
     for row in range(5):
         for column in range(5):
             grid[row][column].update_neighbors(grid)
-    stats = dijkstra_test(grid,[1,1],grid[4,4])
+    start = grid[1][1]
+    end = grid[4][4]
+    stats = dijkstra_test(grid,start,end)
     len = stats['path length']
     graph = Graph()
-    walls = [(1,2),(2,2), (3,2), (4,2), (5,2)]
+    walls = [(1,2),(2,2), (3,2), (4,2)]
     for row in range(5):
         for column in range(5):
             current = (row,column)
             if current not in walls:
-                neighbour_list = [(0,1),(1,0),(-1,0),(0,-1)]
-                for neighbour_difference in neighbour_list:
-                    if (current + neighbour_difference) not in walls:
-                        graph.add_edge(current, current +neighbour_difference, 1) # adds adjacent neighbours
+                neighbour_list = [(row,column + 1),(row + 1,column),(row -1, column),(row, column -1)]
+                for neighbour in neighbour_list:
+                    if (neighbour not in walls and neighbour >= (0,0)):
+                        graph.add_edge(current, neighbour,1)
     #once the graph is built, we test whether the shortest path length found by Python's Dijkstra and our implementation is the same.
     stats_python_implementation = find_path(graph,(1,1), (4,4))
-    len_python = stats_python_implementation[total_cost]
+    len_python = stats_python_implementation[3]
     assert len == len_python
     
     #build the same graph in python's native implementation
@@ -66,11 +67,13 @@ def dijkstra_test(grid, start, end):
     stats = {} # dictionary to store stats 
     stats['total visited'] = 1
     stats['max queue size'] = 1
-
+    path_len = 0
+    stats['path length'] = float('infinity')
     while queue:
         current = queue.popleft()
         current.queued = False # color of spot is linked to different attributes so changing them automatically generates the animation
         if current == end: # found target
+            path_len = reconstruct_path(end, grid)
             stats['path length'] = path_len
             stats['time'] = round(time.time() - start_time, 2) 
             return stats
@@ -78,9 +81,18 @@ def dijkstra_test(grid, start, end):
         for neighbor in current.neighbors:
             if not neighbor.visited:
                 neighbor.visited = True
+                path_len += 1
                 stats['total visited'] += 1
                 neighbor.previous = current
                 queue.append(neighbor)
                 stats['max queue size'] = max(stats['max queue size'], len(queue))
                 neighbor.queued = True
-    
+
+def reconstruct_path(end, grid):
+    path_len = 0
+    current = end 
+    while current.previous:
+        current.path = True 
+        path_len += 1
+        current = current.previous
+    return path_len
