@@ -1,11 +1,12 @@
 from collections import deque
-import pygame
 import time
+
+from components.spot import Spot
 import sys
 import tkinter as tk
 from tkinter import messagebox
 
-def reconstruct_path(start_previous, end_previous, intersect_node, win, grid50):
+def reconstruct_path(start_previous, end_previous, intersect_node):
     len_path = 0
     current = intersect_node
 
@@ -13,8 +14,6 @@ def reconstruct_path(start_previous, end_previous, intersect_node, win, grid50):
     while current is not None:
         len_path += 1
         current.path = True
-        grid50.draw_grid(win)
-        pygame.display.update()
         current = start_previous.get(current)
  
     current = end_previous.get(intersect_node)
@@ -23,13 +22,11 @@ def reconstruct_path(start_previous, end_previous, intersect_node, win, grid50):
     while current is not None:
         len_path += 1
         current.path = True
-        grid50.draw_grid(win)
-        pygame.display.update()
         current = end_previous.get(current) # moving backwards from intersection node to end node
 
     return len_path
 
-def bidirectional_BFS(win, grid50, start, end):
+def bidirectional_BFS(grid50, start, end):
 
     """
     Performs a bidirectional BFS search on a grid to find the shortest path between two nodes.
@@ -67,11 +64,7 @@ def bidirectional_BFS(win, grid50, start, end):
     intersect_node = None
 
     while start_deque and end_deque:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT: # allows exit
-                pygame.quit()
-                sys.exit()
-        
+    
         # alternating between BFS searches from start and end nodes
         for que, visited, previous in [(start_deque, start_visited, start_previous), (end_deque, end_visited, end_previous)]:
             # regular BFS search within this loop
@@ -86,8 +79,6 @@ def bidirectional_BFS(win, grid50, start, end):
                     que.append(neighbor)
                     stats['max queue size'] = max(stats['max queue size'], len(que))
                     neighbor.queued = True
-                    grid50.draw_grid(win)
-                    pygame.display.update()
 
                     # if neighbor is visited by both BFS searches, we have found the intersection node
                     if neighbor in start_visited and neighbor in end_visited:
@@ -101,15 +92,45 @@ def bidirectional_BFS(win, grid50, start, end):
             
         if intersect_node:
             break
-        
-        grid50.draw_grid(win)
-        pygame.display.update()
-
     if intersect_node is not None:
-        stats['path length'] = reconstruct_path(start_previous, end_previous, intersect_node, win, grid50)
+        stats['path length'] = reconstruct_path(start_previous, end_previous, intersect_node)
         stats['time'] = round(time.time() - start_time, 2)
-    else:
-        # no path found, give error message
-        tk.Tk().wm_withdraw()
-        messagebox.showerror('Error', 'No path found')
     return stats
+
+def test_bidirectional_bfs():
+    grid = [[Spot(row, col) for col in range(5)] for row in range(5)]
+    #Test 1: Simple Path (1 is a wall, 0 is a free space) 
+    '''
+    1 1 1 1 1
+    1 0 1 0 1
+    1 0 1 0 0
+    1 0 1 1 0
+    0 0 0 0 0 
+    '''
+    #Constructing the Graph
+    walls = [(0,0),(0,1),(0,2),(0,3),(0,4),(1,0),(1,2),(1,4),(2,0),(2,2),(3,0), (3,2),(3,3)]
+    for wall in walls:
+        u,v = wall
+        grid[u][v].wall = True
+    for row in range(5):
+        for column in range(5):
+            grid[row][column].update_neighbors(grid)
+    stats =  bidirectional_BFS(grid,grid[2][3],grid[3][1])
+    assert stats['path length'] == 8 #checking if the path length is correct
+
+    #Test 2: No path
+    '''
+    1 1 1 1 1
+    1 0 1 0 1
+    1 0 1 0 0
+    1 0 1  0
+    0 0 0 1 0 
+    '''
+    grid[4][3].wall == True
+    for row in range(5):
+        for column in range(5):
+            grid[row][column].update_neighbors(grid)
+    
+    stats2 =  bidirectional_BFS(grid,grid[1][1],grid[1][3])
+    assert stats2 == None
+
