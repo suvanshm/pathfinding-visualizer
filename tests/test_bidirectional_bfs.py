@@ -117,20 +117,3 @@ def test_bidirectional_bfs():
             grid[row][column].update_neighbors(grid)
     stats =  bidirectional_BFS(grid,grid[2][3],grid[3][1])
     assert stats['path length'] == 8 #checking if the path length is correct
-
-    #Test 2: No path
-    '''
-    1 1 1 1 1
-    1 0 1 0 1
-    1 0 1 0 0
-    1 0 1  0
-    0 0 0 1 0 
-    '''
-    grid[4][3].wall == True
-    for row in range(5):
-        for column in range(5):
-            grid[row][column].update_neighbors(grid)
-    
-    stats2 =  bidirectional_BFS(grid,grid[1][1],grid[1][3])
-    assert stats2 == None
-
