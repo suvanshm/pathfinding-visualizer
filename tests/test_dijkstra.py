@@ -27,6 +27,8 @@ def test_dijkstra():
     len = stats['path length']
     graph = Graph()
     walls = [(1,2),(2,2), (3,2), (4,2)]
+    
+    #build the same graph in python's native implementation
     for row in range(5):
         for column in range(5):
             current = (row,column)
@@ -39,8 +41,6 @@ def test_dijkstra():
     stats_python_implementation = find_path(graph,(1,1), (4,4))
     len_python = stats_python_implementation[3]
     assert len == len_python
-    
-    #build the same graph in python's native implementation
     
 
 def dijkstra_test(grid, start, end):

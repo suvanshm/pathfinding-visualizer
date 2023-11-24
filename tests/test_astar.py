@@ -129,3 +129,12 @@ def test_astar():
     assert stats_python[3] == len_manhattan
     stats_python = find_path(graph,(1,1),(4,4),None,None,euclidean)
     assert stats_python[3] == len_euclidean
+     
+    #no path available test
+    grid[0][2].wall = True
+    for row in range(5):
+        for col in range(5):
+            grid[row][col].update_neighbors(grid)
+    assert astar(grid,start,end,h_eucledian) == None
+    assert astar(grid,start,end,h_manhattan) == None
+    
