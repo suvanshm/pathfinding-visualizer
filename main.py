@@ -189,8 +189,9 @@ def reset_buttons(win):
     button_fn(win, "Dijkstra", 610, 125, 70, 25, colors['LIGHT_GREY'], colors['RED'])
     button_fn(win, "A*(Manhattan)", 690, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'])
     button_fn(win, "A*(Euclidean)", 795, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'])
-    button_fn(win, "DFS", 610, 155, 50, 25, colors['LIGHT_GREY'], colors['RED'])
-    button_fn(win, "2-side BFS", 665, 155, 75, 25, colors['LIGHT_GREY'], colors['RED'])
+    button_fn(win, "DFS", 650, 155, 50, 25, colors['LIGHT_GREY'], colors['RED'])
+    button_fn(win, "Bi-directional BFS", 710, 155, 125, 25, colors['LIGHT_GREY'], colors['RED'])
+    # button_fn(win, "2-side BFS", 665, 155, 75, 25, colors['LIGHT_GREY'], colors['RED'])
 
 
 def main(win): 
@@ -232,10 +233,10 @@ def main(win):
         {"label": "A*(Euclidean)", "x": 795, "y": 125, "width": 95, "height": 25, 
          "idle_color": colors['LIGHT_GREY'], "active_color": colors['RED'], 
          "action": lambda: (reset_buttons(win), astar_euclidean_action(win, grid50, start, end, clicked = True))},
-        {"label": "DFS", "x": 610, "y": 155, "width": 50, "height": 25,
+        {"label": "DFS", "x": 650, "y": 155, "width": 50, "height": 25,
         "idle_color": colors['LIGHT_GREY'], "active_color": colors['RED'], 
         "action": lambda: (reset_buttons(win), dfs_action(win, grid50, start, end, clicked = True))}, 
-        {"label": "2-side BFS", "x": 665, "y": 155, "width": 75, "height": 25,
+        {"label": "Bi-directional BFS", "x": 710, "y": 155, "width": 125, "height": 25,
         "idle_color": colors['LIGHT_GREY'], "active_color": colors['RED'],
         "action": lambda: (reset_buttons(win), bidirectional_BFS_action(win, grid50, start, end, clicked = True))}
     ]
