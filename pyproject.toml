@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "final-project"
 version = "0.1.0"
-description = ""
+description = "Pathfinding Visualizer by Jerry, Jakub and Suvansh"
 authors = ["Suvansh Manektala <suvansh.manektala@u.yale-nus.edu.sg>"]
 readme = "README.md"
 packages = [{include = "final_project"}]
