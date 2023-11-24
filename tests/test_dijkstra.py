@@ -12,7 +12,15 @@ import time
 
 
 def test_dijkstra():
-     # create a 5x5 grid with walls in the third column from the 2nd to 5th row (divider)
+    # Test 1: (1s are walls, 0s are free spaces)
+    '''
+    0 0 0 0 0
+    0 0 1 0 0 
+    0 0 1 0 0
+    0 0 1 0 0
+    0 0 1 0 0
+    '''
+    #building the graph with our implementation
     grid = [[Spot(row, col) for col in range(5)] for row in range(5)]
     grid[1][2].wall = True
     grid[2][2].wall = True
@@ -41,13 +49,23 @@ def test_dijkstra():
     stats_python_implementation = find_path(graph,(1,1), (4,4))
     len_python = stats_python_implementation[3]
     assert len == len_python
-    #No Path Available Testing
+
+
+    #Test when no path is available:
+    '''
+    0 0 1 0 0
+    0 0 1 0 0 
+    0 0 1 0 0
+    0 0 1 0 0
+    0 0 1 0 0
+    '''
     grid[0][2].wall = True
     for row in range(5):
         for col in range(5):
             grid[row][col].update_neighbors(grid)
     assert dijkstra_test(grid, start,end) == None
-    #No walls, large test
+
+    #No walls, large test (100 x 100 grid)
     # build the graph in our implementation
     grid100 = [[Spot(row, col) for col in range(100)] for row in range(100)] 
     for row in range(100):
@@ -64,12 +82,12 @@ def test_dijkstra():
                     graph100.add_edge(current, neighbour,1)
     #test if both implementations give the same length 
     assert dijkstra_test(grid100, grid100[1][1],grid100[85][99])['path length'] == find_path(graph100,(1,1),(85,99))[3]
+
 def dijkstra_test(grid, start, end):
     """
     Finds the shortest path between a start and end node on a grid using Dijkstra's algorithm.
 
     Args:
-        win (pygame.Surface): The Pygame window surface to draw the grid on.
         grid (Grid): The grid object representing the grid.
         start (Spot): The starting node.
         end (Spot): The ending node.

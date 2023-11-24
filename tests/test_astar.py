@@ -95,6 +95,15 @@ def reconstruct_path(end, grid):
 
 
 def test_astar():
+    #Test 1: (1s are walls, 0s are free spaces)
+    '''
+    0 0 0 0 0
+    0 0 1 0 0 
+    0 0 1 0 0
+    0 0 1 0 0
+    0 0 1 0 0
+    '''
+    #Building the graph in our implementation
     grid = [[Spot(row, col) for col in range(5)] for row in range(5)]
     grid[1][2].wall = True
     grid[2][2].wall = True
@@ -105,7 +114,7 @@ def test_astar():
             grid[row][column].update_neighbors(grid)
     start = grid[1][1]
     end = grid[4][4]
-    #Test A star with Manhattan Metric
+    #Test 1 A star with Manhattan Metric
     stats = astar(grid,start,end,h_manhattan)
     len_manhattan = stats['path length'] 
     assert len_manhattan == 8
@@ -114,7 +123,7 @@ def test_astar():
     len_euclidean = stats['path length'] 
     assert len_euclidean == 8
     #test A star against built in python method (Dijkstar with each heuristic)
-    #build the graph:
+    #building the graph with Python's implementation
     graph = Graph()
     walls = [(1,2),(2,2), (3,2), (4,2)]
     for row in range(5):
@@ -130,11 +139,19 @@ def test_astar():
     stats_python = find_path(graph,(1,1),(4,4),None,None,euclidean)
     assert stats_python[3] == len_euclidean
      
-    #no path available test
+    #Testing when no path is available
+    '''
+    0 0 1 0 0
+    0 0 1 0 0 
+    0 0 1 0 0
+    0 0 1 0 0
+    0 0 1 0 0
+    '''
     grid[0][2].wall = True
     for row in range(5):
         for col in range(5):
             grid[row][col].update_neighbors(grid)
     assert astar(grid,start,end,h_eucledian) == None
     assert astar(grid,start,end,h_manhattan) == None
-    
+
+

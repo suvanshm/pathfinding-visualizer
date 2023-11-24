@@ -10,8 +10,7 @@ def dfs(grid, start, end):
     Depth-first search algorithm to find a path from start to end node in a grid.
 
     Args:
-    - win: pygame window object
-    - grid50: Grid object representing the grid
+    - grid: Grid object representing the grid
     - start: Spot object representing the starting node
     - end: Spot object representing the ending node
 
@@ -46,17 +45,15 @@ def dfs(grid, start, end):
                 stack.append(neighbor) # add neighbor to stack
                 stats['max queue size'] = max(stats['max queue size'], len(stack))
                 neighbor.queued = True # changes color of spot
+
 def reconstruct_path(end):
     """
     Reconstructs the path from the start node to the end node with an animation. Returns the length of the path also.
 
     Args:
     - end: The end node of the path.
-    - grid50: The grid object representing the game board.
-    - win: The window object representing the game window.
-
     Returns:
-    - The length of the path.
+    - The DFS path to reach the end node
     """
     path_len = 0
     current = end
@@ -70,7 +67,7 @@ def reconstruct_path(end):
 
 def test_dfs():
     grid = [[Spot(row, col) for col in range(5)] for row in range(5)]
-    #Grid looks like (1 is a wall, 0 is a free space) Simple path
+    #Test 1: Simple Path (1 is a wall, 0 is a free space) 
     '''
     1 1 1 1 1
     1 0 1 0 1
@@ -78,6 +75,7 @@ def test_dfs():
     1 0 1 1 0
     0 0 0 0 0 
     '''
+    #Constructing the Graph
     walls = [(0,0),(0,1),(0,2),(0,3),(0,4),(1,0),(1,2),(1,4),(2,0),(2,2),(3,0), (3,2),(3,3)]
     for wall in walls:
         u,v = wall
@@ -105,7 +103,7 @@ def test_dfs():
             grid[row][column].update_neighbors(grid)
     stats = dfs(grid, grid[1][0],grid[1][3])
     assert stats['path'] == ['(1, 3)', '(1, 4)', '(2, 4)', '(3, 4)', '(4, 4)', '(4, 3)', '(4, 2)', '(3, 2)', '(3, 1)', '(3, 0)', '(2, 0)', '(2, 1)', '(1, 1)', '(1, 0)']  
-    # No path available (block off the previous path)
+    # No path available (we block off the previous path)
     '''
     1 1 0 0 1
     0 0 1 0 0 
