@@ -49,7 +49,7 @@ This script implements the A* algorithm, which is a more efficient algorithm for
 
 ### dfs.py
 
-This script implements depth-first search, a simple but powerful algorithm that can find a path in a graph. Depth-first search works by exploring as far as possible along each branch before backtracking. While depth-first search is not guaranteed to find the shortest path, it is useful for exploring complex structures due to its simplicity and low memory requirements. Its time complexity is O(V + E).
+This script implements depth-first search, a simple algorithm that can find a path in a graph. Depth-first search works by exploring as far as possible along each branch before backtracking. While depth-first search is not guaranteed to find the shortest path, it is useful for exploring complex structures due to its simplicity and low memory requirements. Its time complexity is O(V + E).
 
 ### bidirectional_bfs.py
 
@@ -74,4 +74,4 @@ Click 'C' to clear the visualization and also the start/end nodes and walls.
 
 - Displaying Statistics: First, we implemented the algorithms and their visualization but once it was time to display the statistics, things got a little challenging. Firstly, we had to modify the algorithm to calculate different statistics, store and eventually return these statistics in a dictionary. This was doable, but the hard part was displaying these statistics. It was difficult because there were a lot of bugs in getting the stats dictionary returned from the algorithm eventually to the main loop. We encountered unexpected return types, and had to resort to using hacky fixes where we don't ourselves understand why the bug is there in the first place (this has been mentioned explicitly in code comments wherever necessary). 
 
-- Testing: 
+- Testing:

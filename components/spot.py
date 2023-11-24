@@ -38,7 +38,7 @@ class Spot:
         Draws a spot on the given window with the given color at the position specified by the row and column of the spot.
 
         Args:
-            window (pygame.Surface): The window on which the spot is to be drawn.
+            window (pygame.display): The window on which the spot is to be drawn.
             color (tuple): The RGB color tuple for the spot.
 
         Returns:
@@ -64,8 +64,7 @@ class Spot:
         """
         self.neighbors = []
         # check if spot is in a valid position, and check if neighbor is wall
-        # DOWN
-        if self.row < len(grid) - 1 and not grid[self.row + 1][self.col].wall:
+        if self.row < len(grid) - 1 and not grid[self.row + 1][self.col].wall: # DOWN
             self.neighbors.append(grid[self.row + 1][self.col])
         if self.row > 0 and not grid[self.row - 1][self.col].wall:  # UP
             self.neighbors.append(grid[self.row - 1][self.col])
