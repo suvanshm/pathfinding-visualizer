@@ -1,105 +1,94 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/jugTuFiY)
-# Graph Algorithm Visualizer
+# Pathfinding Visualizer
+by Jakub, Jerry and Suvansh
 
-## Description
+This project is a visualization tool for various pathfinding algorithms. It allows you to choose an algorithm, set a start and end point, and watch as the algorithm finds the shortest path between the two points.
 
-Develop a visualization tool for graph traversal algorithms, focusing on Dijkstra and A* algorithms, utilizing Python and Pygame.
+## How to Use
 
-## Project Structure
+To use the visualizer, run the `main.py` script. The dependencies are listed in the pyproject.toml file.
+Use right click to toggle start and end nodes, in that order. 
+Use left click to toggle walls, or left click + drag mouse to set multiple walls. 
+Click on the corresponding button to run the the algorithm. 
+Click 'R' to reset the algorithm visualization, retaining the start/end nodes and walls. 
+Click 'C' to clear the visualization and also the start/end nodes and walls. 
 
-- **algorithms**
-  - `dijkstra.py`: Implementation of Dijkstra's algorithm.
-  - `a_star.py`: Implementation of A* algorithm for pathfinding.
-- **components**
-  - `spot.py`: Definition and management of a spot/node in the grid.
-  - `grid.py`: Handling grid functionality, drawings, and updates.
-- **assets**
-  - `demo.mov`: A demonstration video providing an example of expected outcomes.
-- **main.py**: Main script to execute the application.
-- **pyproject.toml**: Configuration file for Poetry, outlining project dependencies.
+Screenshot of inital window: 
+![Screenshot of initial window](assets/pathfinding1.jpg)
 
-## Prerequisites
+Screenshot after walls and start/end has been set: 
+![Screenshot of window with start/end nodes](assets/pathfinding2.jpg)
 
-- **Python** (3.x recommended)
-- **Poetry**
-- **Pygame**
+Screenshot in the middle of pathfinding: 
+![Screenshot of window in the middle of pathfinding](assets/pathfinding3.jpg)
 
-To install dependencies, utilize Poetry:
-```bash
-poetry add pygame
-```
+Screenshot of final result after path found:
+![Screenshot of final result](assets/pathfinding4.jpg)
 
-Ensure the virtual environment is active when running the project.
+## Project Structure 
 
-## Requirements
+### main.py 
 
-### Core Features
+This is the main entry point for the application. Run this script to start the visualizer.
 
-- Implement and visualize **Dijkstra and A* algorithms** using Pygame.
-- **Path Tracing**: Implement a smooth animation to trace the final path.
-- Allow users to:
-  - Define **start** and **end** nodes.
-  - **Draw barriers** and **clear** them.
-  - **Select** an algorithm to execute.
-  - **Reset** the grid or **clear** the previously found path, while retaining barriers. Ensure that the algorithm can be run again after clearing the path.
-- Ensure the pathfinding algorithm **terminates once the start node finds the end node**.
+### Algorithms 
 
-Please check out the demonstration video for a better understanding of the core features in the assets folder.
+This project includes several different pathfinding algorithms, each in its own Python script.
 
-### [Optional] Additional Features (For Groups of 2 or 3)
+#### djikstra.py 
 
-- Implement **one (groups of 2) or two (groups of 3)** additional graph traversal algorithms.
-- Display pathfinding statistics. They must at least include:
-  - Time taken to traverse.
-  - How many nodes were traversed (space complexity).
-  - One or two additional statistics of your choice. The more the merrier. Be creative!
+This script implements Dijkstra's algorithm, a popular algorithm for finding the shortest path in a graph. Dijkstra's algorithm works by assigning a cost to each node, starting with 0 for the initial node and infinity for all others. It then repeatedly selects the node with the smallest cost, updates the costs of its neighbors, and marks it as visited. This process continues until the destination node has been visited. Dijkstra's algorithm is guaranteed to find the shortest path, and its time complexity is O((V+E) log V) where V is the number of vertices and E is the number of edges. We note this time complexity is for an implementation of Djikstra's algorithm with a priority queue to find the node with smallest cost.  In our case, all the weights/costs are the same fixed value across the entire grid. So essentially, a dijkstra implementation reduces down to simply breadth-first search with time complexity O(V+E), we don't even have to use a priority queue since all costs are the same and can use a regular FIFO queue instead. 
 
-Note these features are a must if you are in a group of 2 or 3. If you are a solo participant, you can implement these features for extra points.
+#### a_star.py
 
-### Bonus: Beat Python’s Built-in (10% Extra Points)
+This script implements the A* algorithm, which is a more efficient algorithm for pathfinding that uses heuristics to guide its search. The A* algorithm works similarly to Dijkstra's algorithm, but in addition to the cost of reaching a node, it also considers an estimate of the cost to reach the destination from that node (the heuristic). This project includes two heuristics: the Manhattan distance, which is the sum of the absolute differences in the x and y coordinates, and the Euclidean distance, which is the square root of the sum of the squares of the differences in the x and y coordinates. The Manhattan heuristic is more suitable when diagonal movement isn't allowed, whereas the Euclidean heuristic is more suitable when we can move diagonally, you can see this visually too by running the two algorithms one after the other and seeing the difference in the path. The A* algorithm is also guaranteed to find the shortest path when usinge   an admissible heuristic (one that never overestimates the true cost), and its time complexity is O((V+E) log V).
 
-Outperform Python's built-in graph traversal in terms of time complexity using one of your implemented algorithms. Ensure relevant comparisons (e.g., Dijkstra with Dijkstra). Document your results, methodology, and findings in your README.md. It is also important to mention why your implementation is able to outperform (or not) the built-in traversal. Bonus points can carry over to other assignments, such as the midterm. Of course, if you produce very impressive results, you may be rewarded with more than 10% extra points and might consider writing a paper about it. You can be creative with your methodology, but ensure that it is valid and reproducible. Include unit tests and screenshots of your results.
+#### dfs.py
 
-### Note
+This script implements depth-first search, a simple algorithm that can find a path in a graph. Depth-first search works by exploring as far as possible along each branch before backtracking. While depth-first search is not guaranteed to find the shortest path, it is useful for exploring complex structures due to its simplicity and low memory requirements. Its time complexity is O(V + E).
 
-Feel free to modify the given template code according to your project needs.
+#### bidirectional_bfs.py
 
-## Grading Rubric
+This script implements bidirectional breadth-first search, an optimized version of the traditional breadth-first search algorithm. Bidirectional breadth-first search works by simultaneously running two breadth-first searches, one from the start node and one from the end node. When the two searches meet, a path has been found. This can significantly reduce the search space and therefore the time complexity, especially in large graphs. However, it's important to note that this algorithm is not guaranteed to find the shortest path in a graph with weighted edges. Its time complexity is O(V + E) where V is the number of vertices and E is the number of edges.
 
-1. **Algorithm Implementation and Visualization**: 50% (65% for solo participants)
-   - Effective implementation and visualization of **Dijkstra and A* algorithms**.
-2. **Code Quality and User Interaction**: 15%
-   - Maintain code quality and ensure intuitive user interactions.
-   - Modular code with proper documentation.
-   - If you want more methodology points, please make sure your code is properly organized and documented so that I can understand your methodology. If not properly documented, I will not be able to understand your methodology and will not be able to give you points.
-3. **Testing and Validation**: 20%
-   - Validate the algorithm’s correctness and efficiency through testing.
-4. [Optional] **Pathfinding Statistics**: 5% (for groups only)
-   - Time taken to traverse.
-   - How many nodes were traversed (space complexity).
-   - One or two additional statistics of your choice. The more the merrier. Be creative!
-5. [Optional] **Additional Algorithm(s) Implementation**: 10% (for groups only)
-   - Implement two more graph traversal algorithms at least.
+### Components 
 
+#### grid.py
 
-## Submission
+The `grid.py` file contains the `Grid` class, which represents a grid of spots. The grid is implemented as a 2D list of `Spot` objects. The `Grid` class has several methods:
 
-Ensure to push your final code to your designated repository before the deadline.
+- `__init__(self, rows)`: Initializes a `Grid` object with a 2D list of `Spot` objects. The number of rows and columns in the grid is determined by the `rows` parameter.
 
-Wishing you the best of luck, and happy coding!
+- `reset()`: Resets all the attributes of each spot in the grid except walls, start, and target. This method is useful for repeating visualizations with the same grid pattern.
 
-## Your README
+- `clear()`: Clears the grid by resetting all spot attributes to their default values.
 
-In your ```README.md```, include:
-- Descriptions of algorithms implemented.
-- Encountered issues or challenges.
-- Instructions on code execution.
-- [If applicable] Methodology and findings from the bonus challenge of beating Python’s built-in algorithms.
-- Any extra information you would like to share with me.
-- **List the names of all group members, or your own name if you are a solo participant.**
+- `draw_grid(window)`: Draws the grid on the given window, with each spot colored according to its state. 
 
-### Tutorial
+- `update_neighbors()`: Updates the neighbors of each spot in the grid based on the current state of the grid. Calls the corresponding spot function for each spot in the grid.
 
-For further guidance on implementing pathfinding algorithms, consider watching the following tutorial: [Coding Train A* Algorithm Tutorial](https://www.youtube.com/watch?v=JtiK0DOeI4A). This resource may provide additional insights or methods for executing pathfinding algorithms in visual formats.
+- `num_wall()`: Returns the number of wall spots in the grid, for displaying in stats menu. 
 
-**Note:** Plagiarism of code from this tutorial will result in a grade of 0 for this assignment. Please ensure that you are not copying code from this tutorial, and that you are implementing the algorithms yourself.
+#### spot.py
+
+The `spot.py` file contains the `Spot` class, which represents a single spot or node on the grid. The `Spot` class has several attributes and methods:
+
+- `__init__(self, row, col)`: Initializes a `Spot` object with the given row and column coordinates. It also initializes several other attributes such as `start`, `target`, `wall`, `visited`, `queued`, `path`, `neighbors`, and `previous`.
+
+- `draw_spot(self, window, color)`: Draws the `Spot` on the given window with the specified color. The position of the spot is determined by its row and column attributes.
+
+- `update_neighbors(self, grid)`: Updates the list of neighboring spots for the current spot based on the given grid. A neighbor is considered valid if it is not a wall and is within the bounds of the grid.
+
+### Tests 
+
+The test folder contains individual files for each search algorithm, where we check whether the algorithms are implemented correctly and efficiently. For Dijktra and A*, this is done by comparing our implementation against the built-in implementation using Dijkstar package. For the other two algorithms, the computation was done manually and checked against the algorithm. Edge cases that are tested include no path available and extremely large grid sizes. Call `pytest` in terminal to run the tests. 
+
+## Encountered Challenges 
+
+- Visualizing the algorithms: At first, even after we implemented the algorithms correctly, the visualization itself was choppy and not smooth. This was fixed by redrawing the grid and updating the pygame display every time a single cell's state (and by extension, colour) was changed. 
+
+- Handling user input: Managing the start and end nodes, walls, and running the algorithms based on user interactions was very tricky. Perhaps our UI design choice was flawed, but using the same key to toggle both the start/grid nodes was very annoying when trying to write code to handle edge cases (when one is set but the other isn't etc).
+
+- Button GUI Bugs: There were a lot of issues with implementing the GUI, especially for the buttons. For a very long time, the clicked state of the button, when the algorithm was running would overwrite all the other button GUI. This had to be resolved by the inefficient solution of redrawing all buttons whenever any button was clicked. There was another bug where a user click was registered multiple times, often quickly resetting the 'clicked' toggle before the program had time to send the call to the actual algorithm, this was fixed by changing the design of the button action functions and adding a small time delay to prevent double clicks. Further, figuring out the edge cases of when a button should be accessible to the user or not was very difficult. Eventually we came up with a solution when the buttons would only be rendered when the necessary conditions were fulfilled. 
+
+- Displaying Statistics: First, we implemented the algorithms and their visualization but once it was time to display the statistics, things got a little challenging. Firstly, we had to modify the algorithm to calculate different statistics, store and eventually return these statistics in a dictionary. This was doable, but the hard part was displaying these statistics. It was difficult because there were a lot of bugs in getting the stats dictionary returned from the algorithm eventually to the main loop. We encountered unexpected return types, and had to resort to using hacky fixes where we don't ourselves understand why the bug is there in the first place (this has been mentioned explicitly in code comments wherever necessary). 
+

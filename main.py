@@ -30,7 +30,7 @@ window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
 pygame.display.set_caption('Pathfinding Visualizer') # title of window
 
 
-def button_fn(screen, msg, x, y, w, h, ic, ac, action=None):
+def button_fn(screen, msg, x, y, w, h, ic, ac, action=None, start=None, end=None):
     """
     Draws a button on the screen with the given parameters and returns the stats from the action function if the button is clicked.
 
@@ -54,8 +54,8 @@ def button_fn(screen, msg, x, y, w, h, ic, ac, action=None):
     if x + w > mouse[0] > x and y + h > mouse[1] > y: # if mouse is hovering over button
         pygame.draw.rect(screen, ac, (x, y, w, h)) # draw button in active color
         if click[0] == 1 and action != None: # if button is clicked and has an action function assigned
-            pygame.time.delay(300) # delay to prevent multiple clicks
-            return action() # return the stats from the action function
+                pygame.time.delay(300) # delay to prevent multiple clicks
+                return action() # return the stats from the action function
     else:
         pygame.draw.rect(screen, ic, (x, y, w, h)) # draw button in inactive color
 
@@ -82,7 +82,7 @@ def dijkstra_action(win, grid50, start, end, clicked=False):
     Returns:
         stats: A dictionary containing statistics about the Dijkstra's algorithm run.
     """
-    if clicked and start and end:
+    if clicked and start is not None and end is not None:
         grid50.reset() # reset grid
         grid50.update_neighbors() # update neighbors for each spot
         stats = dijkstra.dijkstra(win, grid50, start, end) 
@@ -162,7 +162,7 @@ def bidirectional_BFS_action(win, grid50, start, end, clicked=False):
     Returns:
         stats: A dictionary containing statistics about the search, including the number of nodes visited and the path found.
     """
-    if clicked and start and end:
+    if clicked and start is not None and end is not None:
         grid50.reset()
         grid50.update_neighbors()
         stats = bidirectional_bfs.bidirectional_BFS(win, grid50, start, end)
@@ -189,8 +189,9 @@ def reset_buttons(win):
     button_fn(win, "Dijkstra", 610, 125, 70, 25, colors['LIGHT_GREY'], colors['RED'])
     button_fn(win, "A*(Manhattan)", 690, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'])
     button_fn(win, "A*(Euclidean)", 795, 125, 95, 25, colors['LIGHT_GREY'], colors['RED'])
-    button_fn(win, "DFS", 610, 155, 50, 25, colors['LIGHT_GREY'], colors['RED'])
-    button_fn(win, "2-side BFS", 665, 155, 75, 25, colors['LIGHT_GREY'], colors['RED'])
+    button_fn(win, "DFS", 650, 155, 50, 25, colors['LIGHT_GREY'], colors['RED'])
+    button_fn(win, "Bi-directional BFS", 710, 155, 125, 25, colors['LIGHT_GREY'], colors['RED'])
+    # button_fn(win, "2-side BFS", 665, 155, 75, 25, colors['LIGHT_GREY'], colors['RED'])
 
 
 def main(win): 
@@ -225,17 +226,17 @@ def main(win):
     buttons = [
         {"label": "Dijkstra", "x": 610, "y": 125, "width": 70, "height": 25, 
          "idle_color": colors['LIGHT_GREY'], "active_color": colors['RED'], 
-         "action": lambda: (reset_buttons(win), dijkstra_action(win, grid50, start, end, clicked = True))},
+         "action": lambda: (reset_buttons(win), dijkstra_action(win, grid50, start, end, clicked = start and end))},
         {"label": "A*(Manhattan)", "x": 690, "y": 125, "width": 95, "height": 25, 
          "idle_color": colors['LIGHT_GREY'], "active_color": colors['RED'], 
          "action": lambda: (reset_buttons(win), astar_manhattan_action(win, grid50, start, end, clicked = True))},
         {"label": "A*(Euclidean)", "x": 795, "y": 125, "width": 95, "height": 25, 
          "idle_color": colors['LIGHT_GREY'], "active_color": colors['RED'], 
          "action": lambda: (reset_buttons(win), astar_euclidean_action(win, grid50, start, end, clicked = True))},
-        {"label": "DFS", "x": 610, "y": 155, "width": 50, "height": 25,
+        {"label": "DFS", "x": 650, "y": 155, "width": 50, "height": 25,
         "idle_color": colors['LIGHT_GREY'], "active_color": colors['RED'], 
         "action": lambda: (reset_buttons(win), dfs_action(win, grid50, start, end, clicked = True))}, 
-        {"label": "2-side BFS", "x": 665, "y": 155, "width": 75, "height": 25,
+        {"label": "Bi-directional BFS", "x": 710, "y": 155, "width": 125, "height": 25,
         "idle_color": colors['LIGHT_GREY'], "active_color": colors['RED'],
         "action": lambda: (reset_buttons(win), bidirectional_BFS_action(win, grid50, start, end, clicked = True))}
     ]
@@ -335,24 +336,33 @@ def main(win):
         instr2 = 'right-click: toggle start/end'
         instr3 = 'r: reset algo, c: clear grid'
         instr4 = 'click algo button to start:'
+        instr4a = 'select start/end to see algos'
         text_surface = instructionsfont.render(instructions, True, (255, 255, 255))
         text_surface2 = instructionsfont.render(instr2, True, (255, 255, 255))
         text_surface3 = instructionsfont.render(instr3, True, (255, 255, 255))
         text_surface4 = instructionsfont.render(instr4, True, (255, 255, 255))
+        text_surface4a = instructionsfont.render(instr4a, True, (255, 255, 255))
         win.blit(text_surface, (605, 45))
         win.blit(text_surface2, (605, 60))
         win.blit(text_surface3, (605, 75))
         win.blit(seperator, (605, 85))
-        win.blit(text_surface4, (605, 105))
+        if start and end:
+            win.blit(text_surface4, (605, 105))
+        else:
+            win.blit(text_surface4a, (605, 105))
+        
 
         # loop calls button_fn for each button in buttons list
         # if a button is clicked, the stats from the action function are returned
         # if stats are returned, we break out of the loop and display the stats
         for button in buttons:
-            stats = button_fn(win, button["label"], button["x"], button["y"], button["width"], button["height"], button["idle_color"], button["active_color"], button["action"])
-            if stats:
-                break
-        
+            if start and end:
+                stats = button_fn(win, button["label"], button["x"], button["y"], button["width"], button["height"], button["idle_color"], button["active_color"], button["action"])
+                if stats:
+                    break
+            else: 
+                stats = None
+            
 
         # draw stats 
 
@@ -383,7 +393,7 @@ def main(win):
         win.blit(text_surface, (605, 250))
 
         # display stats from algorithm if they exist and have changed
-        if stats != prev_stats and stats:
+        if stats and stats != prev_stats:
             stats_surface.fill((0, 0, 0))  # clear the stats surface
             y_offset = 0  # start at the top of the surface
 

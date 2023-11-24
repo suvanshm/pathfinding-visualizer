@@ -7,14 +7,6 @@ class Grid:
             A 2D list of Spot objects representing the grid.
     """
 
-    # TODO:
-    # Implement the class of the grid [DONE]
-    # You must be able to create a grid [DONE]
-    # You must be able to draw the grid [DONE]
-    # You must be able to reset the grid [DONE]
-    # You must be able to click on the nodes of the grid [DONE]
-    # You must also need to implement a method to update the neighbors of each node which builds on top of the previous [DONE]
-
     def __init__(self, rows):
         """
         Initializes a grid object with a 2D list of Spot objects.
@@ -66,7 +58,7 @@ class Grid:
         Draws the grid on the given window, with each spot colored according to its state.
 
         Parameters:
-        window (pygame.Surface): The window on which to draw the grid.
+        window (pygame.display): The window on which to draw the grid.
 
         Returns:
         None
