@@ -20,6 +20,14 @@ def h_eucledian(spot, target):
     # good for when you can move in any direction
     return ((spot.row - target.row)**2 + (spot.col - target.col)**2)**0.5
 
+def manhattan(u,v,e,prev_e):
+    start_row, start_col = u
+    end_row, end_col = v
+    return (abs(start_row - end_row) + abs(start_col - end_col))
+def euclidean(u,v,e,prev_e):
+    start_row, start_col = u
+    end_row, end_col = v
+    return ((start_row - end_row)**2 + (start_col - end_col)**2)**0.5
 
 def astar(grid5, start, end, heuristic):
     start_time = time.time()
@@ -85,7 +93,7 @@ def reconstruct_path(end, grid):
     return path_len
 
 
-#Test A star with Manhattan Metric
+
 def test_astar():
     grid = [[Spot(row, col) for col in range(5)] for row in range(5)]
     grid[1][2].wall = True
@@ -97,7 +105,27 @@ def test_astar():
             grid[row][column].update_neighbors(grid)
     start = grid[1][1]
     end = grid[4][4]
+    #Test A star with Manhattan Metric
     stats = astar(grid,start,end,h_manhattan)
-    assert stats['path length'] == 8
-
-#Test A star with Euclidean Metric
+    len_manhattan = stats['path length'] 
+    assert len_manhattan == 8
+    #Test A star with Euclidean Metric
+    stats = astar(grid,start,end,h_eucledian)
+    len_euclidean = stats['path length'] 
+    assert len_euclidean == 8
+    #test A star against built in python method (Dijkstar with each heuristic)
+    #build the graph:
+    graph = Graph()
+    walls = [(1,2),(2,2), (3,2), (4,2)]
+    for row in range(5):
+        for column in range(5):
+            current = (row,column)
+            if current not in walls:
+                neighbour_list = [(row,column + 1),(row + 1,column),(row -1, column),(row, column -1)]
+                for neighbour in neighbour_list:
+                    if (neighbour not in walls and neighbour >= (0,0)):
+                        graph.add_edge(current, neighbour,1)
+    stats_python = find_path(graph,(1,1),(4,4),None,None,manhattan)
+    assert stats_python[3] == len_manhattan
+    stats_python = find_path(graph,(1,1),(4,4),None,None,euclidean)
+    assert stats_python[3] == len_euclidean
