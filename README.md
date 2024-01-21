@@ -1,5 +1,5 @@
 # Pathfinding Visualizer
-by Jakub, Jerry and Suvansh
+by Jerry and Suvansh
 
 This project is a visualization tool for various pathfinding algorithms. It allows you to choose an algorithm, set a start and end point, and watch as the algorithm finds the shortest path between the two points.
 
